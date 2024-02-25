@@ -17,5 +17,8 @@ code {
     monospace;
 }
 .secPadding {
-  padding: 40px 0;
+  padding: 20px 0;
+}
+.image-gallery-image{
+  height: 100% !important;
 }

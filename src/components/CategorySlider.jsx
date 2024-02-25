@@ -1,5 +1,6 @@
 import React from "react";
 import Carousel from "react-multi-carousel";
+import cat from "../assets/cat.webp";
 
 const CategorySlider = () => {
   return (
@@ -9,7 +10,7 @@ const CategorySlider = () => {
         additionalTransfrom={0}
         arrows
         autoPlaySpeed={3000}
-        centerMode={false}
+        centerMode
         className=""
         containerClass="container"
         dotListClass=""
@@ -65,9 +66,9 @@ const CategorySlider = () => {
           >
             <div className="image bg-white p-2 w-fit rounded-full">
               <img
-                src="https://via.placeholder.com/150"
+                src={cat}
                 alt="category"
-                className="rounded-full w-[80px] h-[80px]"
+                className="rounded-full w-[100px] h-[100px]"
               />
             </div>
             <span className="truncate w-full text-center text-sm">

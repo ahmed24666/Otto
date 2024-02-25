@@ -1,19 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../assets/OTTO_Logo_New_Big.png";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { IoPersonOutline } from "react-icons/io5";
 import { IoHeartOutline } from "react-icons/io5";
 import { IoBagOutline } from "react-icons/io5";
 import { IoGlobeOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const [openNav, setopenNav] = useState(false)
+  const [openNav, setopenNav] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentPosition = window.pageYOffset;
+
+      if (currentPosition > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
   return (
     <>
-      <div className="navbar m-auto bg-base-100 justify-evenly bg-white">
+      <div className={`navbar m-auto bg-base-100 justify-evenly bg-white ${scrolled?"shadow-xl fixed":""}  z-[99999] top-0 `} style={{transition:"0.5s"}}>
         <div className="navbar-start gap-5 w-fit max-sm:w-full max-sm:justify-evenly">
           <div className={`dropdown `}>
-            <div tabIndex={0} role="button" className="btn btn-ghost md:hidden" onClick={()=>setopenNav(!openNav)}>
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost md:hidden"
+              onClick={() => setopenNav(!openNav)}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -65,9 +91,11 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
-          <a className="text-xl">
-            <img src={logo} alt="Logo" className=" h-[50px] min-w-[108px] " />
-          </a>
+          <Link to="/">
+            <a className="text-xl">
+              <img src={logo} alt="Logo" className=" h-[50px] min-w-[108px] " />
+            </a>
+          </Link>
           <div className="navbar-center flex">
             <ul className="menu menu-horizontal px-1 max-sm:hidden">
               <label className="input input-bordered flex items-center gap-2 rounded-3xl py-0 h-10">

@@ -1,9 +1,10 @@
 import React from "react";
 import Carousel from "react-multi-carousel";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import model from "../assets/model.avif";
+import { Link } from "react-router-dom";
 
-
-const CommonProductSlider = ({title}) => {
+const CommonProductSlider = ({ title }) => {
   return (
     <div className="container m-auto secPadding flex flex-col gap-8 ">
       <h1 className="text-lg font-semibold">{title}</h1>
@@ -11,7 +12,7 @@ const CommonProductSlider = ({title}) => {
         additionalTransfrom={0}
         arrows
         autoPlaySpeed={3000}
-        centerMode={false}
+        centerMode
         className=""
         containerClass="container"
         dotListClass=""
@@ -61,45 +62,44 @@ const CommonProductSlider = ({title}) => {
         swipeable
       >
         {[...Array(10)].map((_, i) => (
-          <div
-            key={i}
-            className="rounded-2xl bg-white flex flex-col justify-center items-center gap-1"
-          >
-            <div className="image p-2 w-full rounded-lg">
-              <img
-                src="https://via.placeholder.com/150"
-                alt="category"
-                className="rounded-lg w-full h-[180px] object-cover"
-              />
-            </div>
-            <span className="truncate w-full text-center text-xs text-gray-500">
-              Mens Wear , T-shirt
-            </span>
-            <span className="truncate w-full text-center text-sm font-semibold">
-              Black Men Casual Belt
-            </span>
-            <div className="flex text-yellow-500">
-              {[...Array(5)].map((_, i) => {
-                return 2 > i ? <AiFillStar /> : <AiOutlineStar />;
-              })}
-            </div>
-            <span className="truncate w-full text-center text-base font-bold">
+          <Link to="/product/1">
+            <div
+              key={i}
+              className="rounded-2xl bg-white flex flex-col justify-center items-center gap-1"
+            >
+              <div className="image p-2 w-full rounded-lg">
+                <img
+                  src={model}
+                  alt="category"
+                  className="rounded-lg w-full h-[270px] object-cover"
+                />
+              </div>
+              <span className="truncate w-full text-center text-xs text-gray-500">
+                Mens Wear , T-shirt
+              </span>
+              <span className="truncate w-full text-center text-sm font-semibold">
+                Black Men Casual Belt
+              </span>
+              <div className="flex text-yellow-500">
+                {[...Array(5)].map((_, i) => {
+                  return 2 > i ? <AiFillStar /> : <AiOutlineStar />;
+                })}
+              </div>
+              <span className="truncate w-full text-center text-base font-bold">
                 $ 20.00
-            </span>
-            <div className="flex gap-1 pb-2">
-              {[...Array(5)].map((_, i) => {
-                return (
-                    <div className="image cursor-pointer">
-                        <img
-                            src="https://via.placeholder.com/150"
-                            alt="category"
-                            className="rounded-lg w-[30] h-[30px] object-cover"
-                        />
-                    </div>                    
-                    )
-              })}
+              </span>
+              <div className="flex flex-wrap gap-1 pt-2 pb-4 px-4 justify-center">
+                {[...Array(5)].map((_, i) => {
+                  return (
+                    <div
+                      className="colors w-[26px] h-[26px] rounded-full"
+                      style={{ backgroundColor: "red" }}
+                    ></div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </Carousel>
     </div>
