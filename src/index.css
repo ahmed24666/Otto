@@ -17,6 +17,22 @@ body {
     margin: 0 20px;
     width: calc(100% - 40px);
   }
+  .image-gallery-thumbnail-image{
+    height: 100px!important;
+    object-fit: cover !important;
+  }
+}
+@media (max-width: 576px){
+  .container {
+    margin: 0 10px;
+    width: calc(100% - 20px);
+  }
+}
+.footer{
+  display: flex !important;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 code {
@@ -29,3 +45,4 @@ code {
 .image-gallery-image{
   height: 100% !important;
 }
+

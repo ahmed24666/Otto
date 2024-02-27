@@ -2,6 +2,7 @@ import React from "react";
 import Carousel from "react-multi-carousel";
 import cat from "../assets/cat.webp";
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const CategorySlider = () => {
   return (
@@ -80,21 +81,23 @@ const CategorySlider = () => {
         swipeable
       >
         {[...Array(10)].map((_, i) => (
-          <div
-            key={i}
-            className="rounded-full flex flex-col justify-center items-center gap-4"
-          >
-            <div className="image bg-white p-2 w-fit rounded-full">
-              <img
-                src={cat}
-                alt="category"
-                className="rounded-full w-[100px] h-[100px]"
-              />
+          <Link to="/category/1">
+            <div
+              key={i}
+              className="rounded-full flex flex-col justify-center items-center gap-4"
+            >
+              <div className="image bg-white p-2 w-fit rounded-full">
+                <img
+                  src={cat}
+                  alt="category"
+                  className="rounded-full w-[100px] h-[100px]"
+                />
+              </div>
+              <span className="truncate w-full text-center text-sm">
+                Mens Wear
+              </span>
             </div>
-            <span className="truncate w-full text-center text-sm">
-              Mens Wear
-            </span>
-          </div>
+          </Link>
         ))}
       </Carousel>
     </div>
