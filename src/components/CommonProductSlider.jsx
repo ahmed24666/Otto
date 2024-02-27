@@ -3,6 +3,7 @@ import Carousel from "react-multi-carousel";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import model from "../assets/model.avif";
 import { Link } from "react-router-dom";
+import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 
 const CommonProductSlider = ({ title }) => {
   return (
@@ -11,15 +12,26 @@ const CommonProductSlider = ({ title }) => {
       <Carousel
         additionalTransfrom={0}
         arrows
+        autoPlay
+        customLeftArrow={
+          <div className="absolute top-1/2 -left-[0px] transform -translate-y-1/2 bg-gray-800/50 p-2 rounded-full flex justify-center items-center">
+            <MdArrowBackIosNew className="text-xl text-white cursor-pointer" />
+          </div>
+        }
+        customRightArrow={
+          <div className="absolute top-1/2 -right-[0px] transform -translate-y-1/2 bg-gray-800/50 p-2 rounded-full flex justify-center items-center">
+            <MdArrowForwardIos className="text-xl text-white cursor-pointer" />
+          </div>
+        }
         autoPlaySpeed={3000}
-        centerMode
+        centerMode={false}
         className=""
         containerClass="container"
         dotListClass=""
         draggable
         focusOnSelect={false}
-        infinite={false}
-        itemClass="mx-1"
+        infinite
+        itemClass="px-1 bg-transparent"
         keyBoardControl
         minimumTouchDrag={80}
         pauseOnHover
@@ -30,26 +42,34 @@ const CommonProductSlider = ({ title }) => {
           desktop: {
             breakpoint: {
               max: 3000,
-              min: 1024,
+              min: 1440,
             },
             items: 5,
-            partialVisibilityGutter: 40,
+            partialVisibilityGutter: 0,
           },
           mobile: {
             breakpoint: {
-              max: 464,
+              max: 767,
               min: 0,
             },
             items: 1,
-            partialVisibilityGutter: 30,
+            partialVisibilityGutter: 0,
+          },
+          mobilebig: {
+            breakpoint: {
+              max: 767,
+              min: 473,
+            },
+            items: 2,
+            partialVisibilityGutter: 0,
           },
           tablet: {
             breakpoint: {
               max: 1024,
-              min: 464,
+              min: 768,
             },
             items: 3,
-            partialVisibilityGutter: 30,
+            partialVisibilityGutter: 0,
           },
         }}
         rewind={false}
@@ -65,13 +85,13 @@ const CommonProductSlider = ({ title }) => {
           <Link to="/product/1">
             <div
               key={i}
-              className="rounded-2xl bg-white flex flex-col justify-center items-center gap-1"
+              className="rounded-2xl bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px]"
             >
               <div className="image p-2 w-full rounded-lg">
                 <img
                   src={model}
                   alt="category"
-                  className="rounded-lg w-full h-[270px] object-cover"
+                  className="rounded-lg w-full aspect-[1/1] max-md:h-[242px] object-cover"
                 />
               </div>
               <span className="truncate w-full text-center text-xs text-gray-500">

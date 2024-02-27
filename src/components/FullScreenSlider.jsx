@@ -21,7 +21,7 @@ const FullScreenSlider = () => {
                 customTransition="all 0.5s linear"
                 centerMode={false}
                 className="rounded-2xl overflow-hidden"
-                containerClass="container"
+                containerClass=""
                 dotListClass=""
                 draggable
                 focusOnSelect={false}
@@ -71,19 +71,19 @@ const FullScreenSlider = () => {
                 {imgs.map((_, i) => (
                     <div
                         key={i}
-                        className=" bg-white flex flex-col justify-center items-center relative h-[550px] "
+                        className=" bg-white flex flex-col justify-center items-center relative h-[550px] max-xl:h-[450px] max-lg:h-[350px]"
                     >
-                        <div className="image w-full   h-full">
+                        <div className="image w-full h-full">
                             <img
                                 src={imgs[i]}
                                 alt="product"
                                 className="w-full h-full object-cover "
                             />
                         </div>
-                        <div className=" w-full h-full flex flex-col justify-center items-start gap-5 p-20 absolute bg-gray-900/20">
-                            <span className="text-2xl font-bold text-red-500">Summer Collection</span>
-                            <h1 className="text-5xl font-bold text-white">Beach House Style</h1>
-                            <p className="text-xl w-1/2 text-white">
+                        <div className=" w-full h-full flex flex-col justify-center items-start gap-5 max-sm:gap-3 p-20 max-sm:p-10 absolute bg-gray-900/30">
+                            <span className="text-2xl font-bold text-red-500 max-lg:text-xl max-sm:text-base max-md:text-center w-full">Summer Collection</span>
+                            <h1 className="text-5xl font-bold text-white max-lg:text-3xl max-sm:text-2xl max-md:text-center  w-full">Beach House Style</h1>
+                            <p className="text-xl w-1/2 max-lg:w-4/5 max-md:w-full max-md:text-center text-white max-lg:text-base">
                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
                                 nec dui at ex fermentum tincidunt. Fusce tincidunt, nunc sit amet
                                 aliquam.

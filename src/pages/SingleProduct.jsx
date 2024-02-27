@@ -106,8 +106,8 @@ const SingleProduct = ({ note }) => {
           (3)
         </div>
       </div>
-      <div className="flex gap-1 my-1">
-        <div className="flex-[4] flex flex-col">
+      <div className="flex gap-1 my-1 max-md:flex-col">
+        <div className="flex-[4]  flex flex-col">
           <div className="w-full bg-white p-4">
             <ReactImageGallery
               items={images}
@@ -138,7 +138,7 @@ const SingleProduct = ({ note }) => {
               );
             })}
           </div>
-          <div className="w-full bg-white p-4 mt-1 space-y-4">
+          <div className="w-full bg-white p-4 mt-1 space-y-4 max-md:hidden">
             <h4 className="text-lg text-black font-semibold">Rate This Product :</h4>
             <div className="rating rating-lg rating-half">
               <input type="radio" name="rating-10" className="rating-hidden" />
@@ -230,6 +230,35 @@ const SingleProduct = ({ note }) => {
               </div>
             </div>
           </div>
+          {true && (
+            <div className="bg-white p-4 mt-1 space-y-6 flex flex-col items-center">
+              <h4 className="text-lg text-black font-semibold">CountDown :</h4>
+              <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
+                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                  <span className="countdown font-mono text-5xl">{d}</span>
+                  days
+                </div>
+                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                  <span className="countdown font-mono text-5xl">
+                    <span style={{ "--value": h }}></span>
+                  </span>
+                  hours
+                </div>
+                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                  <span className="countdown font-mono text-5xl">
+                    <span style={{ "--value": m }}></span>
+                  </span>
+                  min
+                </div>
+                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+                  <span className="countdown font-mono text-5xl">
+                    <span style={{ "--value": s }}></span>
+                  </span>
+                  sec
+                </div>
+              </div>
+            </div>
+          )}
           <div className="bg-white p-4 space-y-4 mt-1">
             <button className="relative bg-red-600 text-white p-3 w-full flex items-center justify-center rounded-lg">
               Add to Cart
@@ -264,35 +293,30 @@ const SingleProduct = ({ note }) => {
               </p>
             )}
           </div>
-          {true && (
-            <div className="bg-white p-4 mt-1 space-y-6 flex flex-col items-center">
-              <h4 className="text-lg text-black font-semibold">CountDown :</h4>
-              <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
-                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                  <span className="countdown font-mono text-5xl">{d}</span>
-                  days
-                </div>
-                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                  <span className="countdown font-mono text-5xl">
-                    <span style={{ "--value": h }}></span>
-                  </span>
-                  hours
-                </div>
-                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                  <span className="countdown font-mono text-5xl">
-                    <span style={{ "--value": m }}></span>
-                  </span>
-                  min
-                </div>
-                <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                  <span className="countdown font-mono text-5xl">
-                    <span style={{ "--value": s }}></span>
-                  </span>
-                  sec
-                </div>
-              </div>
+          <div className="w-full bg-white p-4 mt-1 space-y-4 hidden max-md:block">
+            <h4 className="text-lg text-black font-semibold">Rate This Product :</h4>
+            <div className="rating rating-lg rating-half">
+              <input type="radio" name="rating-10" className="rating-hidden" />
+              {[...Array(5)].map((_, i) => {
+                return (
+                  <>
+                    <input
+                      type="radio"
+                      name="rating-10"
+                      className="bg-yellow-500 mask mask-star-2 mask-half-1 !w-4"
+                      onClick={() => setselectedRating((i + 1) - 0.5)}
+                    />
+                    <input
+                      type="radio"
+                      name="rating-10"
+                      className="bg-yellow-500 mask mask-star-2 mask-half-2 !w-4"
+                      onClick={() => setselectedRating((i + 1))}
+                    />
+                  </>
+                );
+              })}
             </div>
-          )}
+          </div>
         </div>
       </div>
       <CommonProductSlider title={"Recommendations for you"}/>

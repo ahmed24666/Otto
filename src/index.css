@@ -11,6 +11,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+@media (max-width: 767px){
+  .container {
+    max-width: unset;
+    margin: 0 20px;
+    width: calc(100% - 40px);
+  }
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

@@ -1,6 +1,7 @@
 import React from "react";
 import Carousel from "react-multi-carousel";
 import cat from "../assets/cat.webp";
+import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 
 const CategorySlider = () => {
   return (
@@ -9,15 +10,26 @@ const CategorySlider = () => {
       <Carousel
         additionalTransfrom={0}
         arrows
+        autoPlay
+        customLeftArrow={
+          <div className="absolute top-1/2 -left-[0px] transform -translate-y-1/2 bg-gray-800/50 p-2 rounded-full flex justify-center items-center">
+            <MdArrowBackIosNew className="text-xl text-white cursor-pointer" />
+          </div>
+        }
+        customRightArrow={
+          <div className="absolute top-1/2 -right-[0px] transform -translate-y-1/2 bg-gray-800/50 p-2 rounded-full flex justify-center items-center">
+            <MdArrowForwardIos className="text-xl text-white cursor-pointer" />
+          </div>
+        }
         autoPlaySpeed={3000}
-        centerMode
+        centerMode={false}
         className=""
         containerClass="container"
         dotListClass=""
         draggable
         focusOnSelect={false}
-        infinite={false}
-        itemClass="mx-1"
+        infinite
+        itemClass="px-1 bg-transparent"
         keyBoardControl
         minimumTouchDrag={80}
         pauseOnHover
@@ -30,8 +42,16 @@ const CategorySlider = () => {
               max: 3000,
               min: 1024,
             },
-            items: 7,
+            items: 6,
             partialVisibilityGutter: 40,
+          },
+          mobilebig: {
+            breakpoint: {
+              max: 767,
+              min: 465,
+            },
+            items: 3,
+            partialVisibilityGutter: 0,
           },
           mobile: {
             breakpoint: {
@@ -44,7 +64,7 @@ const CategorySlider = () => {
           tablet: {
             breakpoint: {
               max: 1024,
-              min: 464,
+              min: 768,
             },
             items: 4,
             partialVisibilityGutter: 30,

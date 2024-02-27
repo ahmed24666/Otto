@@ -4,10 +4,10 @@ const Banar = () => {
   return (
     <div className="container m-auto rounded-2xl overflow-hidden bg-white">
       <div className="p-6 space-y-2">
-        <p>Discount 50%</p>
-        <h2 className="font-semibold text-xl">Beach House Style</h2>
+        <p className="max-sm:text-sm">Discount 50%</p>
+        <h2 className="font-semibold text-xl max-sm:text-lg">Beach House Style</h2>
       </div>
-      <div className="w-full h-[300px] bg-gray-300">
+      <div className="w-full h-[300px] max-sm:h-[230px] bg-gray-300">
         <img
           src={img}
           alt="banar"
