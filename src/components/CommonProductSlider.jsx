@@ -4,6 +4,7 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import model from "../assets/model.avif";
 import { Link } from "react-router-dom";
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
+import { IoBagOutline, IoHeartOutline } from "react-icons/io5";
 
 const CommonProductSlider = ({ title }) => {
   return (
@@ -85,8 +86,22 @@ const CommonProductSlider = ({ title }) => {
           <Link to="/product/1">
             <div
               key={i}
-              className="rounded-2xl bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px]"
+              className="rounded-2xl bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px] relative"
             >
+              
+              <div className="love absolute bg-white shadow-lg rounded-full flex justify-center items-center top-5 right-5 w-8 h-8">
+                <button className="">
+                  <IoHeartOutline size={18} />
+                </button>
+              </div>
+              <div className="love absolute bg-white shadow-lg rounded-full flex justify-center items-center top-16 right-5 w-8 h-8">
+                <button className="">
+                  <IoBagOutline size={18} />
+                </button>
+              </div>
+              <div className="love absolute bg-red-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
+                -15%
+              </div>
               <div className="image p-2 w-full rounded-lg">
                 <img
                   src={model}
