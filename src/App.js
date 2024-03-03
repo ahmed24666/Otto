@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SingleProduct from './pages/SingleProduct';
 import Category from './pages/Category';
+import Cart from './pages/Cart';
 
 function AppLayout() {
   return (
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/category/:id",
         element: <Category/>,
+      },
+      {
+        path: "/cart",
+        element: <Cart/>,
       },
     ],
   },

@@ -13,32 +13,33 @@ import sp3 from "../assets/sp3.avif";
 import sp4 from "../assets/sp4.avif";
 import sp5 from "../assets/sp5.avif";
 import CommonProductSlider from "../components/CommonProductSlider";
+import { Link } from "react-router-dom";
 
 const images = [
   {
     original: sp1,
     thumbnail: sp1,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
   },
   {
     original: sp2,
     thumbnail: sp2,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
   },
   {
     original: sp3,
     thumbnail: sp3,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
   },
   {
     original: sp4,
     thumbnail: sp4,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
   },
   {
     original: sp5,
     thumbnail: sp5,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
   },
 ];
 const sizes = [
@@ -54,11 +55,10 @@ const sizes = [
 const SingleProduct = ({ note }) => {
   const [selectedColor, setselectedColor] = useState(0);
   const [selectedSize, setselectedSize] = useState(0);
-  const [selectedRating, setselectedRating] = useState(0)
+  const [selectedRating, setselectedRating] = useState(0);
   useEffect(() => {
-    console.log(selectedRating)
-  }, [selectedRating])
-  
+    console.log(selectedRating);
+  }, [selectedRating]);
 
   const endDate = `9-25-2024 23:30:00`;
 
@@ -89,7 +89,6 @@ const SingleProduct = ({ note }) => {
     return () => clearInterval(x);
   }, []);
 
-
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
 
   useEffect(() => {
@@ -97,10 +96,10 @@ const SingleProduct = ({ note }) => {
       setIsMobile(window.innerWidth <= 767);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -128,7 +127,7 @@ const SingleProduct = ({ note }) => {
             <ReactImageGallery
               items={images}
               lazyLoad
-              thumbnailPosition={isMobile?"bottom":"left"}
+              thumbnailPosition={isMobile ? "bottom" : "left"}
               infinite
               showNav={false}
               showFullscreenButton={false}
@@ -155,7 +154,9 @@ const SingleProduct = ({ note }) => {
             })}
           </div>
           <div className="w-full bg-white p-4 mt-1 space-y-4 max-md:hidden">
-            <h4 className="text-lg text-black font-semibold">Rate This Product :</h4>
+            <h4 className="text-lg text-black font-semibold">
+              Rate This Product :
+            </h4>
             <div className="rating rating-lg rating-half">
               <input type="radio" name="rating-10" className="rating-hidden" />
               {[...Array(5)].map((_, i) => {
@@ -165,13 +166,13 @@ const SingleProduct = ({ note }) => {
                       type="radio"
                       name="rating-10"
                       className="bg-yellow-500 mask mask-star-2 mask-half-1 !w-4 !max-sm:w-3"
-                      onClick={() => setselectedRating((i + 1) - 0.5)}
+                      onClick={() => setselectedRating(i + 1 - 0.5)}
                     />
                     <input
                       type="radio"
                       name="rating-10"
                       className="bg-yellow-500 mask mask-star-2 mask-half-2 !w-4 !max-sm:w-3"
-                      onClick={() => setselectedRating((i + 1))}
+                      onClick={() => setselectedRating(i + 1)}
                     />
                   </>
                 );
@@ -222,7 +223,9 @@ const SingleProduct = ({ note }) => {
             </div>
             <div className="flex gap-4 items-center">
               <TbMailbox className="text-2xl text-black" />
-              <p className="text-red-600 max-md:text-sm">Available - in 2-3 working days</p>
+              <p className="text-red-600 max-md:text-sm">
+                Available - in 2-3 working days
+              </p>
             </div>
           </div>
           <div className="bg-white p-4 space-y-6 max-md:space-y-3 mt-1">
@@ -251,24 +254,26 @@ const SingleProduct = ({ note }) => {
               <h4 className="text-lg text-black font-semibold">CountDown :</h4>
               <div className="grid grid-flow-col gap-5 text-center auto-cols-max">
                 <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-                  <span className="countdown font-mono text-5xl max-md:text-xl text-center">{d}</span>
+                  <span className="countdown font-mono text-5xl max-md:text-xl text-center">
+                    {d}
+                  </span>
                   days
                 </div>
                 <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
                   <span className="countdown font-mono text-5xl max-md:text-xl ">
-                    <span style={{ "--value": h , margin:"auto"}}></span>
+                    <span style={{ "--value": h, margin: "auto" }}></span>
                   </span>
                   hours
                 </div>
                 <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
                   <span className="countdown font-mono text-5xl max-md:text-xl ">
-                    <span style={{ "--value": m , margin:"auto"}}></span>
+                    <span style={{ "--value": m, margin: "auto" }}></span>
                   </span>
                   min
                 </div>
                 <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
                   <span className="countdown font-mono text-5xl max-md:text-xl ">
-                    <span style={{ "--value": s , margin:"auto"}}></span>
+                    <span style={{ "--value": s, margin: "auto" }}></span>
                   </span>
                   sec
                 </div>
@@ -276,12 +281,14 @@ const SingleProduct = ({ note }) => {
             </div>
           )}
           <div className="bg-white p-4 space-y-4 mt-1">
-            <button className="relative bg-red-600 text-white p-3 w-full flex items-center justify-center rounded-lg">
-              Add to Cart
-              <span className="absolute top-1/2 left-2 text-2xl translate -translate-y-1/2 text-white rounded-full p-1">
-                <IoBagOutline />
-              </span>
-            </button>
+            <Link to="/cart">
+              <button className="relative bg-red-600 text-white p-3 w-full flex items-center justify-center rounded-lg">
+                Add to Cart
+                <span className="absolute top-1/2 left-2 text-2xl translate -translate-y-1/2 text-white rounded-full p-1">
+                  <IoBagOutline />
+                </span>
+              </button>
+            </Link>
             <button
               className="relative text-black p-3 w-full flex items-center justify-center rounded-lg"
               style={{ backgroundColor: "rgb(236, 236, 236)" }}
@@ -310,7 +317,9 @@ const SingleProduct = ({ note }) => {
             )}
           </div>
           <div className="w-full bg-white p-4 mt-1 space-y-4 hidden max-md:block">
-            <h4 className="text-lg text-black font-semibold">Rate This Product :</h4>
+            <h4 className="text-lg text-black font-semibold">
+              Rate This Product :
+            </h4>
             <div className="rating rating-lg rating-half">
               <input type="radio" name="rating-10" className="rating-hidden" />
               {[...Array(5)].map((_, i) => {
@@ -320,13 +329,13 @@ const SingleProduct = ({ note }) => {
                       type="radio"
                       name="rating-10"
                       className="bg-yellow-500 mask mask-star-2 mask-half-1 !w-4 !max-sm:w-3"
-                      onClick={() => setselectedRating((i + 1) - 0.5)}
+                      onClick={() => setselectedRating(i + 1 - 0.5)}
                     />
                     <input
                       type="radio"
                       name="rating-10"
                       className="bg-yellow-500 mask mask-star-2 mask-half-2 !w-4 !max-sm:w-3"
-                      onClick={() => setselectedRating((i + 1))}
+                      onClick={() => setselectedRating(i + 1)}
                     />
                   </>
                 );
@@ -335,8 +344,7 @@ const SingleProduct = ({ note }) => {
           </div>
         </div>
       </div>
-      <CommonProductSlider title={"Recommendations for you"}/>
-
+      <CommonProductSlider title={"Recommendations for you"} />
     </div>
   );
 };
