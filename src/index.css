@@ -118,12 +118,12 @@ code {
 }
 
 input:checked + .slider {
-  background-color: #007bff;
-  border: 1px solid #007bff;
+  background-color: #dc2626;
+  border: 1px solid #dc2626;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #007bff;
+  box-shadow: 0 0 1px #dc2626;
 }
 
 input:checked + .slider:before {

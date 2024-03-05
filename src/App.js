@@ -6,14 +6,15 @@ import Footer from './components/Footer';
 import SingleProduct from './pages/SingleProduct';
 import Category from './pages/Category';
 import Cart from './pages/Cart';
+import Login from './pages/Login';
 
 function AppLayout() {
   return (
-    <Fragment>
+    <div className='min-h-[100vh] flex flex-col justify-between'>
       <Navbar/>
       <Outlet/>
       <Footer/>
-    </Fragment>
+    </div>
   );
 }
 
@@ -38,6 +39,18 @@ const router = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart/>,
+      },
+      {
+        path: "/wishlist",
+        element: <Cart wish/>,
+      },
+      {
+        path: "/login",
+        element: <Login/>,
+      },
+      {
+        path: "/signup",
+        element: <Login signup/>,
       },
     ],
   },

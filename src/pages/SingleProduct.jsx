@@ -210,7 +210,7 @@ const SingleProduct = ({ note }) => {
                     <div
                       className={`${
                         i === selectedSize
-                          ? "border border-black"
+                          ? "border border-[#dc2626]"
                           : "border border-gray-300"
                       } rounded-lg p-3 flex justify-center items-center cursor-pointer max-md:text-sm max-md:p-2`}
                       onClick={() => setselectedSize(i)}

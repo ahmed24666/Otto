@@ -2,22 +2,24 @@ import React from "react";
 import ProductImage from "../assets/model.avif";
 import { MdClose } from "react-icons/md";
 
-const Cart = () => {
+const Cart = ({ wish }) => {
   return (
     <div className="container m-auto">
-      <div className="top my-1 bg-white rounded-lg p-3 flex justify-center items-center">
-        <ul className="steps w-1/2 max-lg:w-full">
-          <li className="step step-error" data-content="">
-            My Shopping Cart
-          </li>
-          <li className="step" data-content="">
-            Checkout
-          </li>
-          <li className="step" data-content="">
-            Thank You !
-          </li>
-        </ul>
-      </div>
+      {!wish && (
+        <div className="top my-1 bg-white rounded-lg p-3 flex justify-center items-center">
+          <ul className="steps w-1/2 max-lg:w-full">
+            <li className="step step-error max-sm:text-sm" data-content="">
+              My Shopping Cart
+            </li>
+            <li className="step max-sm:text-sm" data-content="">
+              Checkout
+            </li>
+            <li className="step max-sm:text-sm" data-content="">
+              Thank You !
+            </li>
+          </ul>
+        </div>
+      )}
       <div className="center my-1 bg-white rounded-lg p-3 flex">
         <div className="overflow-x-auto  w-full">
           <table className="table">
@@ -26,7 +28,7 @@ const Cart = () => {
               <tr>
                 <th>Image</th>
                 <th>Product</th>
-                <th>Number</th>
+                {!wish && <th>Number</th>}
                 <th>Price</th>
                 <th></th>
               </tr>
@@ -54,20 +56,22 @@ const Cart = () => {
                         available - in 2-3 working days
                       </p>
                     </td>
+                    {!wish && (
+                      <td>
+                        <div className="flex items-center">
+                          <button className="btn btn-outline btn-error text-xl hover:!text-white">
+                            -
+                          </button>
+                          <span className="mx-1 p-3">1</span>
+                          <button className="btn btn-outline btn-error text-xl hover:!text-white">
+                            +
+                          </button>
+                        </div>
+                      </td>
+                    )}
                     <td>
-                      <div className="flex items-center">
-                        <button className="btn btn-outline btn-error text-xl hover:!text-white">
-                          -
-                        </button>
-                        <span className="mx-1 p-3">1</span>
-                        <button className="btn btn-outline btn-error text-xl hover:!text-white">
-                          +
-                        </button>
-                      </div>
-                    </td>
-                    <td>
-                      <p className="line-through text-center">€ 23,99</p>
-                      <p className="text-red-600 font-semibold text-lg text-center">
+                      <p className="line-through">€ 23,99</p>
+                      <p className="text-red-600 font-semibold text-lg">
                         € 23,99
                       </p>
                     </td>
@@ -83,34 +87,36 @@ const Cart = () => {
           </table>
         </div>
       </div>
-      <div className="flex gap-1">
-        <div className="mb-1 bg-white rounded-lg p-3 px-6 flex justify-between flex-1 items-center">
-          <div className="space-y-5">
-            <div className="flex justify-between items-center gap-5">
-              <h3 className="font-bold text-xl">Subtotal :</h3>
-              <h3 className="text-xl">€ 23,99</h3>
+      {!wish && (
+        <div className="flex md:gap-1 max-md:flex-col">
+          <div className="mb-1 bg-white rounded-lg p-3 px-6 flex justify-between flex-1 items-center min-w-[270px]">
+            <div className="space-y-5 max-md:w-full">
+              <div className="flex justify-between items-center gap-5">
+                <h3 className="font-bold text-xl max-sm:text-lg">Subtotal :</h3>
+                <h3 className="text-xl max-sm:text-lg">€ 23,99</h3>
+              </div>
+              <div className="flex justify-between items-center gap-5">
+                <h3 className="font-bold text-xl max-sm:text-lg">Shipping :</h3>
+                <h3 className="text-xl max-sm:text-lg">€ 23,99</h3>
+              </div>
             </div>
-            <div className="flex justify-between items-center gap-5">
-              <h3 className="font-bold text-xl">Shipping :</h3>
-              <h3 className="text-xl">€ 23,99</h3>
+          </div>
+          <div className="mb-1 bg-white rounded-lg p-3 px-6 flex justify-between flex-[3]">
+            <div className="space-y-5 flex items-center justify-between w-full max-sm:flex-col max-sm:gap-5 max-sm:py-4">
+              <div className="flex justify-between items-center gap-5">
+                <h3 className="font-bold text-xl max-sm:text-lg">Total :</h3>
+                <h3 className="text-xl max-sm:text-lg">€ 23,99</h3>
+              </div>
+              <div className="flex flex-col gap-5 !mt-0">
+                <button className="btn btn-outline btn-error hover:!text-white">
+                  Continue Shopping
+                </button>
+                <button className="btn btn-error !text-white">Checkout</button>
+              </div>
             </div>
           </div>
         </div>
-        <div className="mb-1 bg-white rounded-lg p-3 px-6 flex justify-between flex-[4]">
-          <div className="space-y-5 flex items-center justify-between w-full">
-            <div className="flex justify-between items-center gap-5">
-              <h3 className="font-bold text-xl">Total :</h3>
-              <h3 className="text-xl">€ 23,99</h3>
-            </div>
-            <div className="flex flex-col gap-5 !mt-0">
-              <button className="btn btn-outline btn-error">
-                Continue Shopping
-              </button>
-              <button className="btn btn-error">Checkout</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
