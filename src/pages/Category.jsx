@@ -83,7 +83,7 @@ const Category = React.memo(() => {
             </div>
           </div>
 
-          <div className="drawer z-[9]">
+          <div className="drawer z-[999999999]">
             <input id="my-drawer" type="checkbox" className="drawer-toggle" />
             <div className="drawer-side">
               <label
