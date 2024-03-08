@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/OTTO_Logo_New_Big.png";
+import logo from "../assets/logo.png";
 const Footer = () => {
   return (
     <div className="bg-white">

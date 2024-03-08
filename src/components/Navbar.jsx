@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import logo from "../assets/OTTO_Logo_New_Big.png";
+import logo from "../assets/logo.png";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { IoPersonOutline } from "react-icons/io5";
 import { IoHeartOutline } from "react-icons/io5";
