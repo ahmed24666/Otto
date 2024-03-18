@@ -7,6 +7,7 @@ import SingleProduct from './pages/SingleProduct';
 import Category from './pages/Category';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
+import VarifyEmail from './pages/VarifyEmail';
 
 function AppLayout() {
   return (
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "/signup",
         element: <Login signup/>,
+      },
+      {
+        path: "/email-verification",
+        element: <VarifyEmail/>,
       },
     ],
   },

@@ -128,7 +128,7 @@ const Navbar = () => {
           </div>
           <Link to="/">
             <a className="text-xl">
-              <img src={logo} alt="Logo" className=" h-[50px] min-w-[108px] " />
+              <img src={logo} alt="Logo" className=" h-[50px] min-w-[108px] object-contain" />
             </a>
           </Link>
           <div className="navbar-center flex">

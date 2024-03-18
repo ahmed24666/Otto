@@ -99,7 +99,7 @@ const CommonProductSlider = ({ title }) => {
                   <IoBagOutline size={18} />
                 </button>
               </div>
-              <div className="love absolute bg-red-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
+              <div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
                 -15%
               </div>
               <div className="image p-2 w-full rounded-lg">
@@ -127,8 +127,7 @@ const CommonProductSlider = ({ title }) => {
                 {[...Array(5)].map((_, i) => {
                   return (
                     <div
-                      className="colors w-[26px] h-[26px] rounded-full"
-                      style={{ backgroundColor: "red" }}
+                      className="colors w-[26px] h-[26px] rounded-full bg-indigo-600"
                     ></div>
                   );
                 })}

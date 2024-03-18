@@ -120,7 +120,7 @@ const CategoryComp = React.memo(({mobile}) => {
                   <div
                     className={`${
                       i === selectedSize
-                        ? "border border-[#dc2626]"
+                        ? "border border-[#5137ff]"
                         : "border border-gray-300"
                     } rounded-lg p-3 flex justify-center items-center cursor-pointer max-lg:text-xs max-lg:p-2`}
                     onClick={() => setselectedSize(i)}

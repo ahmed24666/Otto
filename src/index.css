@@ -118,15 +118,39 @@ code {
 }
 
 input:checked + .slider {
-  background-color: #dc2626;
-  border: 1px solid #dc2626;
+  background-color: #5137ff;
+  border: 1px solid #5137ff;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #dc2626;
+  box-shadow: 0 0 1px #5137ff;
 }
 
 input:checked + .slider:before {
   transform: translate(0.6em , 50%);
   background-color: #fff;
+}
+.btn-outline.btn-error{
+  outline-color: #5137ff;
+  color: #5137ff;
+}
+.btn-outline.btn-error:hover {
+  background-color: #5137ff;
+  border-color: #5137ff;
+}
+.Checkout{
+  background-color: #5137ff;
+  border-color: #5137ff;
+  color: #fff;
+}
+.Checkout:hover{
+  background-color: #5137ff;
+  border-color: #5137ff;
+  color: #fff;
+}
+.steps .step-error + .step-error:before{
+  background-color: #5137ff;
+}
+.steps .step-error:after{
+  background-color: #5137ff;
 }

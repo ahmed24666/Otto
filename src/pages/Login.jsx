@@ -1,11 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { SignupApi } from "../services/apis";
 const Login = ({ signup }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [phone, setPhone] = useState("");
+  const [errorSignup, seterrorSignup] = useState(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (signup) {
+      if (
+        /^.{8,}$/.test(password) &&
+        /[A-Z]/.test(password) &&
+        /[a-z]/.test(password) &&
+        /\d/.test(password) &&
+        /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password)
+      ) {
+        var formData = new FormData();
+        formData.append("email", email);
+        formData.append("name", name);
+        formData.append("username", username);
+        formData.append("password", password);
+        formData.append("phone", phone);
+
+        fetch("https://siedra-shop.com/api/auth/register", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.warn(data);
+            if (data.status === false) {
+              console.log(data.errors);
+              seterrorSignup(data.errors);
+            } else {
+              seterrorSignup(null);
+              navigate("/email-verification");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else {
+        return;
+      }
+    } else {
+    }
+  };
   return (
     <div class="relative py-3 md:w-[500px] w-full mx-auto">
       <div class="relative px-4 py-10 bg-white max-md:mx-3 md:mx-0 shadow rounded-3xl sm:p-10">
-        <div class="max-w-md mx-auto">
+        <form class="max-w-md mx-auto" onSubmit={handleSubmit}>
           <div class="flex items-center space-x-5 justify-center">
             <img src={logo} alt="" className="w-[100px]" />
           </div>
@@ -20,6 +71,8 @@ const Login = ({ signup }) => {
               class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
               type="email"
               id="email"
+              required
+              onChange={(e) => setEmail(e.target.value)}
             />
             {signup && (
               <>
@@ -33,6 +86,8 @@ const Login = ({ signup }) => {
                   class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                   type="text"
                   id="username"
+                  required
+                  onChange={(e) => setUsername(e.target.value)}
                 />
                 <label
                   class="font-semibold text-sm text-gray-600 pb-1 block"
@@ -43,7 +98,9 @@ const Login = ({ signup }) => {
                 <input
                   class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                   type="text"
+                  required
                   id="Name"
+                  onChange={(e) => setName(e.target.value)}
                 />
                 <label
                   class="font-semibold text-sm text-gray-600 pb-1 block"
@@ -54,7 +111,9 @@ const Login = ({ signup }) => {
                 <input
                   class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                   type="text"
+                  required
                   id="phone"
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </>
             )}
@@ -67,8 +126,69 @@ const Login = ({ signup }) => {
             <input
               class="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
               type="password"
+              required
               id="password"
+              onChange={(e) => setPassword(e.target.value)}
             />
+            <ul className="list-disc ml-4 text-sm text-gray-500">
+              {signup &&
+                password.length > 0 &&
+                !(
+                  /^.{8,}$/.test(password) &&
+                  /[A-Z]/.test(password) &&
+                  /[a-z]/.test(password) &&
+                  /\d/.test(password) &&
+                  /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password)
+                ) && (
+                  <>
+                    <li
+                      className={`${
+                        /^.{8,}$/.test(password) ? "" : "text-red-500"
+                      }`}
+                    >
+                      Password must be at least 8 characters long
+                    </li>
+                    <li
+                      className={`${
+                        /[A-Z]/.test(password) ? "" : "text-red-500"
+                      }`}
+                    >
+                      One uppercase letter
+                    </li>
+                    <li
+                      className={`${
+                        /[a-z]/.test(password) ? "" : "text-red-500"
+                      }`}
+                    >
+                      One lowercase letter
+                    </li>
+                    <li
+                      className={`${/\d/.test(password) ? "" : "text-red-500"}`}
+                    >
+                      One number
+                    </li>
+                    <li
+                      className={`${
+                        /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password)
+                          ? ""
+                          : "text-red-500"
+                      }`}
+                    >
+                      One special character (e.g., !, @, #, $, etc.)
+                    </li>
+                  </>
+                )}
+              {errorSignup &&
+                errorSignup.map((item) => {
+                  return (
+                    <li className="text-red-500">
+                      {item === "This username is already taken."
+                        ? "This username is already taken."
+                        : "This email is already taken."}
+                    </li>
+                  );
+                })}
+            </ul>
           </div>
           {signup && (
             <div class="text-right mb-4">
@@ -169,14 +289,14 @@ const Login = ({ signup }) => {
           <div class="mt-5">
             {signup ? (
               <button
-                class="py-2 px-4 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
                 type="submit"
               >
                 Signup
               </button>
             ) : (
               <button
-                class="py-2 px-4 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
                 type="submit"
               >
                 Login
@@ -206,7 +326,7 @@ const Login = ({ signup }) => {
             )}
             <span class="w-1/5 border-b dark:border-gray-400 md:w-1/4"></span>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

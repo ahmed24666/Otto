@@ -210,7 +210,7 @@ const SingleProduct = ({ note }) => {
                     <div
                       className={`${
                         i === selectedSize
-                          ? "border border-[#dc2626]"
+                          ? "border border-[#5137ff]"
                           : "border border-gray-300"
                       } rounded-lg p-3 flex justify-center items-center cursor-pointer max-md:text-sm max-md:p-2`}
                       onClick={() => setselectedSize(i)}
@@ -223,7 +223,7 @@ const SingleProduct = ({ note }) => {
             </div>
             <div className="flex gap-4 items-center">
               <TbMailbox className="text-2xl text-black" />
-              <p className="text-red-600 max-md:text-sm">
+              <p className="text-indigo-600 max-md:text-sm">
                 Available - in 2-3 working days
               </p>
             </div>
@@ -232,7 +232,7 @@ const SingleProduct = ({ note }) => {
             <div className="flex flex-col gap-4">
               <p className="font-semibold text-base text-black">Price :</p>
               <div className="flex items-center gap-4">
-                <div className="px-2 py-1 rounded-lg bg-red-600 w-fit text-white max-md:text-sm">
+                <div className="px-2 py-1 rounded-lg bg-indigo-600 w-fit text-white max-md:text-sm">
                   -15%
                 </div>
                 <span className=" text-lg text-gray-500 line-through max-md:text-base">
@@ -240,7 +240,7 @@ const SingleProduct = ({ note }) => {
                 </span>
               </div>
               <div className="flex flex-col gap-4">
-                <span className="text-red-600 text-3xl text-black font-semibold max-md:text-xl">
+                <span className="text-indigo-600 text-3xl text-black font-semibold max-md:text-xl">
                   $ 18.99
                 </span>
                 <span className="text-gray-500 max-md:text-sm">
@@ -282,7 +282,7 @@ const SingleProduct = ({ note }) => {
           )}
           <div className="bg-white p-4 space-y-4 mt-1">
             <Link to="/cart">
-              <button className="relative bg-red-600 text-white p-3 w-full flex items-center justify-center rounded-lg">
+              <button className="relative bg-indigo-600 text-white p-3 w-full flex items-center justify-center rounded-lg">
                 Add to Cart
                 <span className="absolute top-1/2 left-2 text-2xl translate -translate-y-1/2 text-white rounded-full p-1">
                   <IoBagOutline />
@@ -300,7 +300,7 @@ const SingleProduct = ({ note }) => {
             </button>
             <div className="flex gap-4 items-center">
               <TbMailboxOff className="text-2xl text-black" />
-              <p className="text-red-600">30 days free returns</p>
+              <p className="text-indigo-600">30 days free returns</p>
             </div>
           </div>
           <div className="bg-white p-4 mt-1 space-y-6 max-md:space-y-3 ">

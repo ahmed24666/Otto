@@ -56,7 +56,7 @@ const Category = React.memo(() => {
                       </div>
                     );
                   })}
-                  <div className="selected flex gap-2 bg-red-100 w-fit items-center px-2 py-1 rounded-xl cursor-pointer">
+                  <div className="selected flex gap-2 bg-indigo-100 w-fit items-center px-2 py-1 rounded-xl cursor-pointer">
                     <span className="text-gray-700 text-xs">Clear</span>
                   </div>
                 </div>
@@ -75,7 +75,7 @@ const Category = React.memo(() => {
                 </div>
                 <label
                   htmlFor="my-drawer"
-                  className="btn drawer-button bg-red-500 hidden max-md:flex"
+                  className="btn drawer-button bg-indigo-500 hidden max-md:flex"
                 >
                   <PiSlidersDuotone size={24} color="white" />
                 </label>
@@ -118,7 +118,7 @@ const Category = React.memo(() => {
                       <IoBagOutline size={18} />
                     </button>
                   </div>
-                  <div className="love absolute bg-red-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
+                  <div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
                     -15%
                   </div>
                   <div className="image p-2 w-full rounded-lg">
@@ -149,8 +149,7 @@ const Category = React.memo(() => {
                     {[...Array(5)].map((_, i) => {
                       return (
                         <div
-                          className="colors w-[26px] h-[26px] rounded-full"
-                          style={{ backgroundColor: "red" }}
+                          className="colors w-[26px] h-[26px] rounded-full bg-indigo-600"
                         ></div>
                       );
                     })}
