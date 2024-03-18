@@ -10,9 +10,10 @@ const Home = () => {
     window.scrollTo(0, 0);
   }, [window.location.pathname]);
   useEffect(() => {
-    SignupApi().then((res) => {
-      console.log(res);
-    });
+    SignupApi()
+    // .then((res) => {
+    //   console.log(res);
+    // });
   }, [])
   
   return (
