@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import cat from "../assets/cat.webp";
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 import { Link } from "react-router-dom";
 
+
 const CategorySlider = () => {
+  const [categories, setcategories] = useState([])
+  useEffect(() => {
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow"
+    };
+    
+    fetch("https://siedra-shop.com/api/categories/", requestOptions)
+      .then((response) => response.json())
+      .then((result) => setcategories(result.data.categories))
+      .catch((error) => console.error(error));
+  }, [])
+  
   return (
     <div className="container m-auto secPadding flex flex-col gap-8 ">
       <h1 className="text-lg font-semibold">Explore your target categories</h1>
@@ -49,18 +63,10 @@ const CategorySlider = () => {
           mobilebig: {
             breakpoint: {
               max: 767,
-              min: 465,
+              min: 0,
             },
             items: 3,
             partialVisibilityGutter: 0,
-          },
-          mobile: {
-            breakpoint: {
-              max: 464,
-              min: 0,
-            },
-            items: 2,
-            partialVisibilityGutter: 30,
           },
           tablet: {
             breakpoint: {
@@ -80,21 +86,21 @@ const CategorySlider = () => {
         slidesToSlide={1}
         swipeable
       >
-        {[...Array(10)].map((_, i) => (
+        {categories?.map((item, i) => (
           <Link to="/category/1">
             <div
-              key={i}
+              key={item.id}
               className="rounded-full flex flex-col justify-center items-center gap-4"
             >
               <div className="image bg-white p-2 w-fit rounded-full">
                 <img
-                  src={cat}
+                  src={item.Image_link}
                   alt="category"
-                  className="rounded-full w-[100px] h-[100px]"
+                  className="rounded-full w-[100px] h-[100px] max-sm:w-[70px] max-sm:h-[70px]"
                 />
               </div>
               <span className="truncate w-full text-center text-sm">
-                Mens Wear
+                {item.name_ar}
               </span>
             </div>
           </Link>

@@ -192,12 +192,14 @@ const Login = ({ signup }) => {
           </div>
           {signup && (
             <div class="text-right mb-4">
-              <a
-                class="text-xs font-display font-semibold text-gray-500 hover:text-gray-600 cursor-pointer"
-                href="#"
-              >
-                Forgot Password?
-              </a>
+              <Link to="/forget-password">
+                <a
+                  class="text-xs font-display font-semibold text-gray-500 hover:text-gray-600 cursor-pointer"
+                  href="#"
+                >
+                  Forgot Password?
+                </a>
+              </Link>
             </div>
           )}
           {/* <div class="flex justify-center w-full items-center">

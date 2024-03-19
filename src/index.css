@@ -53,10 +53,10 @@ code {
   width: 15px !important;
   height: 15px !important;
   top: -4.5px !important;
-  outline: #ef4444 5px solid !important;
+  outline: #5137ff 5px solid !important;
 }
 .double-range-slider-under {
-  background-color: #ef4444 !important;
+  background-color: #5137ff !important;
 }
 .double-range-slider-under {
   top: 35px !important;
@@ -67,10 +67,10 @@ code {
 }
 .double-range-slider-track {
   height: 5px !important;
-  background-color: #ef4444 !important;
+  background-color: #5137ff !important;
 }
 .double-range-slider-under::after {
-  border-color: transparent transparent #ef4444 transparent !important;
+  border-color: transparent transparent #5137ff transparent !important;
 }
 
 

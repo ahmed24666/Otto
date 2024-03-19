@@ -13,35 +13,36 @@ import sp3 from "../assets/sp3.avif";
 import sp4 from "../assets/sp4.avif";
 import sp5 from "../assets/sp5.avif";
 import CommonProductSlider from "../components/CommonProductSlider";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-const images = [
-  {
-    original: sp1,
-    thumbnail: sp1,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
+const images2 = [
+  { 
+    original: "https://siedra-shop.com/admin/uploads/images/items-images/6338_Azzrk.jpg", 
+    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/6338_Azzrk.jpg", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
   },
-  {
-    original: sp2,
-    thumbnail: sp2,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
+  { 
+    original: "https://siedra-shop.com/admin/uploads/images/items-images/4171_profile Logo.jpg", 
+    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/4171_profile Logo.jpg", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
   },
-  {
-    original: sp3,
-    thumbnail: sp3,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
+  { 
+    original: "https://siedra-shop.com/admin/uploads/images/items-images/1179_profile.jpg", 
+    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/1179_profile.jpg", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
   },
-  {
-    original: sp4,
-    thumbnail: sp4,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
+  { 
+    original: "https://siedra-shop.com/admin/uploads/images/items-images/4876_128262500.jpeg", 
+    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/4876_128262500.jpeg", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
   },
-  {
-    original: sp5,
-    thumbnail: sp5,
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
-  },
+  { 
+    original: "https://siedra-shop.com/admin/uploads/images/items-images/1161_Azzrk.jpg", 
+    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/1161_Azzrk.jpg", 
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
+  }
 ];
+
 const sizes = [
   "S (44/46)",
   "M (48/50)",
@@ -53,12 +54,12 @@ const sizes = [
   "5XL (72/74)",
 ];
 const SingleProduct = ({ note }) => {
+  const [product, setProduct] = useState({});
+  const [images, setImages] = useState([...Array(10)]);
+  const [renderPhotos, setrenderPhotos] = useState(false)
   const [selectedColor, setselectedColor] = useState(0);
   const [selectedSize, setselectedSize] = useState(0);
   const [selectedRating, setselectedRating] = useState(0);
-  useEffect(() => {
-    console.log(selectedRating);
-  }, [selectedRating]);
 
   const endDate = `9-25-2024 23:30:00`;
 
@@ -107,23 +108,57 @@ const SingleProduct = ({ note }) => {
     window.scrollTo(0, 0);
   }, [window.location.pathname]);
 
+  // GET DATA FROM API
+  const params = useParams().id.replaceAll(" ", "-");
+
+  useEffect(() => {
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+
+    fetch(
+      `https://siedra-shop.com/api/products/product/${params}`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => setProduct(result.data.product))
+      .catch((error) => console.error(error));
+  }, []);
+  useEffect(() => {
+    let images = [];
+    product?.images?.map((img) => {
+      images.push({
+        original: img.link,
+        thumbnail: img.link,
+        originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
+      });
+      console.log(images);
+    });
+    setImages(images);
+    setrenderPhotos(true)
+  }, [product]);
+
+
   return (
     <div className="container m-auto">
       <div className="title bg-white p-6 my-1 flex flex-col gap-4">
-        <span className="text-gray-600">Mens Wear , T-shirt</span>
+        <span className="text-gray-600">{product?.category?.name_du}</span>
         <h1 className="text-2xl font-semibold max-md:text-lg">
-          Jack & Jones Langarmshirt mit Printaufdruck
+          {product?.name_du}
         </h1>
         <div className="flex text-yellow-500 text-2xl max-md:text-lg items-center gap-1">
           {[...Array(5)].map((_, i) => {
-            return 2 > i ? <AiFillStar /> : <AiOutlineStar />;
+            return product.rating > i ? <AiFillStar /> : <AiOutlineStar />;
           })}
-          (3)
+          ({product.ratingCount})
         </div>
       </div>
       <div className="flex gap-1 my-1 max-md:flex-col">
-        <div className="flex-[4]  flex flex-col">
+        <div className="flex-[4] flex flex-col">
           <div className="w-full bg-white p-4">
+            {product?.images && images && renderPhotos && (
+
             <ReactImageGallery
               items={images}
               lazyLoad
@@ -136,6 +171,7 @@ const SingleProduct = ({ note }) => {
               autoPlay
               slideOnThumbnailOver
             />
+            )}
           </div>
           <div className="w-full bg-white p-4 max-md:space-y-3 mt-1 space-y-6">
             <h4 className="text-lg text-black font-semibold">Description :</h4>

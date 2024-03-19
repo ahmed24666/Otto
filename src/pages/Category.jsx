@@ -1,15 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import model from "../assets/model.avif";
 import CategoryBanar from "../assets/CategoryBannar.jpeg";
-import { IoBagOutline } from "react-icons/io5";
 import { IoHeartOutline } from "react-icons/io5";
 import { PiSlidersDuotone } from "react-icons/pi";
 import { IoMdClose } from "react-icons/io";
 import CategoryComp from "../components/CategoryComp";
 
+
+const requestOptions = {
+  method: "GET",
+  redirect: "follow"
+};
+
+
 const Category = React.memo(() => {
+  const [allProducts, setallProducts] = useState([])
+
+  // GET ALL PRODUCTS FROM API
+
+  useEffect(() => {
+    // &min_price=750&max_price=800&color=%23b71f1f&size=Impedit exercitatio&sort=high 
+    fetch(`https://siedra-shop.com/api/products/?offset=0&limit=12`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => setallProducts(result.data.products))
+      .catch((error) => console.error(error));
+  }, [])
+  
   return (
     <div className="container m-auto">
       <div className="top bg-white my-1 flex max-sm:flex-col max-sm:gap-3 justify-between items-center px-5 py-2 rounded-lg">
@@ -102,8 +120,8 @@ const Category = React.memo(() => {
           </div>
 
           <div className="products flex flex-wrap justify-evenly gap-2 my-3">
-            {[...Array(15)].map((_, i) => (
-              <Link to="/product/1">
+            {allProducts.map((item, i) => (
+              <Link to={`/product/${item.name_du}`}>
                 <div
                   key={i}
                   className="rounded-lg bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px] w-[340px] max-lg:w-[260px] p-[0px] relative"
@@ -113,43 +131,41 @@ const Category = React.memo(() => {
                       <IoHeartOutline size={18} />
                     </button>
                   </div>
-                  <div className="love absolute bg-white shadow-lg rounded-full flex justify-center items-center top-16 right-5 w-8 h-8">
-                    <button className="">
-                      <IoBagOutline size={18} />
-                    </button>
-                  </div>
-                  <div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
-                    -15%
-                  </div>
+                  {item.sale > 0 &&(<div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
+                    {item.sale}%
+                  </div>)}
                   <div className="image p-2 w-full rounded-lg">
                     <img
-                      src={model}
+                      src={item?.images?.[0]?.link}
                       alt="category"
                       className="rounded-lg w-full aspect-[1/1] max-md:h-[242px] object-cover"
                     />
                   </div>
                   <span className="truncate w-full text-center text-xs text-gray-500">
-                    Mens Wear , T-shirt
+                    {item.category.name_ar}
                   </span>
                   <span className="truncate w-full text-center text-sm font-semibold">
-                    Black Men Casual Belt
+                    {item.name_ar}
                   </span>
                   <div className="flex text-yellow-500">
                     {[...Array(5)].map((_, i) => {
-                      return 2 > i ? <AiFillStar /> : <AiOutlineStar />;
+                      return item.rating > i ? <AiFillStar /> : <AiOutlineStar />;
                     })}
                   </div>
                   <span className="truncate w-full text-center text-base font-bold flex items-center gap-3 justify-center">
-                    $ 20.00{" "}
+                    $ {item.price - (item.price * item.sale) / 100}
                     <span className="line-through text-gray-400 font-semibold">
-                      $ 24.00{" "}
+                     $ {item.price}
                     </span>
                   </span>
                   <div className="flex flex-wrap gap-1 pt-2 pb-4 px-4 justify-center">
-                    {[...Array(5)].map((_, i) => {
+                    {item.colors && item.colors.map((_, i) => {
                       return (
                         <div
-                          className="colors w-[26px] h-[26px] rounded-full bg-indigo-600"
+                          className="colors w-[26px] h-[26px] rounded-full"
+                          style={{
+                            backgroundColor: item.colors[i].color_code,
+                          }}
                         ></div>
                       );
                     })}

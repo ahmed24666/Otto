@@ -8,6 +8,8 @@ import Category from './pages/Category';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import VarifyEmail from './pages/VarifyEmail';
+import ForgetPassword from './pages/ForgetPassword';
+import ResetPassword from './pages/ResetPassword';
 
 function AppLayout() {
   return (
@@ -38,6 +40,10 @@ const router = createBrowserRouter([
         element: <Category/>,
       },
       {
+        path: "/products",
+        element: <Category/>,
+      },
+      {
         path: "/cart",
         element: <Cart/>,
       },
@@ -56,6 +62,14 @@ const router = createBrowserRouter([
       {
         path: "/email-verification",
         element: <VarifyEmail/>,
+      },
+      {
+        path: "/forget-password",
+        element: <ForgetPassword/>,
+      },
+      {
+        path: "/reset-password",
+        element: <ResetPassword/>,
       },
     ],
   },

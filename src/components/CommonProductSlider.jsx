@@ -4,7 +4,7 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import model from "../assets/model.avif";
 import { Link } from "react-router-dom";
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
-import { IoBagOutline, IoHeartOutline } from "react-icons/io5";
+import {  IoHeartOutline } from "react-icons/io5";
 
 const CommonProductSlider = ({ title }) => {
   return (
@@ -13,7 +13,6 @@ const CommonProductSlider = ({ title }) => {
       <Carousel
         additionalTransfrom={0}
         arrows
-        autoPlay
         customLeftArrow={
           <div className="absolute top-1/2 -left-[0px] transform -translate-y-1/2 bg-gray-800/50 p-2 rounded-full flex justify-center items-center">
             <MdArrowBackIosNew className="text-xl text-white cursor-pointer" />
@@ -24,7 +23,6 @@ const CommonProductSlider = ({ title }) => {
             <MdArrowForwardIos className="text-xl text-white cursor-pointer" />
           </div>
         }
-        autoPlaySpeed={3000}
         centerMode={false}
         className=""
         containerClass="container"
@@ -50,10 +48,10 @@ const CommonProductSlider = ({ title }) => {
           },
           mobile: {
             breakpoint: {
-              max: 767,
+              max: 473,
               min: 0,
             },
-            items: 1,
+            items: 2,
             partialVisibilityGutter: 0,
           },
           mobilebig: {
@@ -86,7 +84,7 @@ const CommonProductSlider = ({ title }) => {
           <Link to="/product/1">
             <div
               key={i}
-              className="rounded-2xl bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px] relative"
+              className="rounded-2xl bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px] max-[473px]:h-auto relative"
             >
               
               <div className="love absolute bg-white shadow-lg rounded-full flex justify-center items-center top-5 right-5 w-8 h-8">
@@ -94,40 +92,35 @@ const CommonProductSlider = ({ title }) => {
                   <IoHeartOutline size={18} />
                 </button>
               </div>
-              <div className="love absolute bg-white shadow-lg rounded-full flex justify-center items-center top-16 right-5 w-8 h-8">
-                <button className="">
-                  <IoBagOutline size={18} />
-                </button>
-              </div>
-              <div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
+              <div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1 max-[473px]:text-xs">
                 -15%
               </div>
               <div className="image p-2 w-full rounded-lg">
                 <img
                   src={model}
                   alt="category"
-                  className="rounded-lg w-full aspect-[1/1] max-md:h-[242px] object-cover"
+                  className="rounded-lg w-full aspect-[1/1] max-md:h-[242px] object-cover max-[473px]:h-[200px]"
                 />
               </div>
               <span className="truncate w-full text-center text-xs text-gray-500">
                 Mens Wear , T-shirt
               </span>
-              <span className="truncate w-full text-center text-sm font-semibold">
+              <span className="truncate w-full text-center text-sm font-semibold max-[473px]:px-3">
                 Black Men Casual Belt
               </span>
-              <div className="flex text-yellow-500">
+              {/* <div className="flex text-yellow-500">
                 {[...Array(5)].map((_, i) => {
                   return 2 > i ? <AiFillStar /> : <AiOutlineStar />;
                 })}
-              </div>
-              <span className="truncate w-full text-center text-base font-bold">
+              </div> */}
+              <span className="truncate w-full text-center text-base font-bold max-[473px]:text-sm">
                 $ 20.00
               </span>
               <div className="flex flex-wrap gap-1 pt-2 pb-4 px-4 justify-center">
                 {[...Array(5)].map((_, i) => {
                   return (
                     <div
-                      className="colors w-[26px] h-[26px] rounded-full bg-indigo-600"
+                      className="colors w-[26px] h-[26px] max-[473px]:w-[20px] max-[473px]:h-[20px] rounded-full bg-indigo-600"
                     ></div>
                   );
                 })}
