@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RangeSlider } from "react-double-range-slider";
 
-const CategoryComp = React.memo(({mobile}) => {
-    const [selectedSize, setselectedSize] = useState(0);
-    const [price, setPrice] = useState({
-      minIndex: 0,
-      maxIndex: 0,
-    });
-    const [from, setfrom] = useState(0);
-    const [to, setto] = useState(0);
-    const [selectedColor, setselectedColor] = useState(0);
-    const [selectedRating, setselectedRating] = useState(0);
+const CategoryComp = React.memo(({mobile,setPrice,setselectedColor,selectedColor,setselectedRating,setselectedSize,selectedSize ,price}) => {
+    // const [selectedSize, setselectedSize] = useState(0);
+    // const [price, setPrice] = useState({
+    //   minIndex: 0,
+    //   maxIndex: 0,
+    // });
+
+    // const [selectedColor, setselectedColor] = useState(0);
+    // const [selectedRating, setselectedRating] = useState(0);
     const mensCategories = [
         {
           id: 1,
@@ -79,6 +78,10 @@ const CategoryComp = React.memo(({mobile}) => {
         "4XL (68/70)",
         "5XL (72/74)",
       ];
+      useEffect(() => {
+        console.info(price)
+      }, [price])
+      
     return (
       <div className={`${mobile?"":"flex-[2] bg-white rounded-lg max-md:hidden"} p-5 space-y-5 `}>
           <div className="Categories space-y-5">
@@ -138,17 +141,19 @@ const CategoryComp = React.memo(({mobile}) => {
                 Price
               </div>
               <div className="collapse-content">
-                <RangeSlider
-                  value={{ min: 0, max: 10 }}
-                  onChange={(e) => {
-                    setPrice({
-                      minIndex: e.minIndex,
-                      maxIndex: e.maxIndex,
-                    });
-                  }}
-                  tooltipPosition="under"
-                  tooltipVisibility="always"
-                />
+                
+                  <RangeSlider
+                    value={{ min: 0, max: 3000 }}
+                    onChange={(e) => {
+                      setPrice({
+                        minIndex: e.minIndex,
+                        maxIndex: e.maxIndex,
+                      });
+                    }}
+                    tooltipPosition="under"
+                    tooltipVisibility="always"
+                  />
+
               </div>
             
             

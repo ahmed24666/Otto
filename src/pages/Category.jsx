@@ -8,26 +8,73 @@ import { PiSlidersDuotone } from "react-icons/pi";
 import { IoMdClose } from "react-icons/io";
 import CategoryComp from "../components/CategoryComp";
 
-
 const requestOptions = {
   method: "GET",
-  redirect: "follow"
+  redirect: "follow",
 };
 
+const Category = React.memo(({ allProductsPage }) => {
+  const [allProducts, setallProducts] = useState([]);
+  const [offset, setOffset] = useState(0);
+  const [hideShowMore, sethideShowMore] = useState(false);
 
-const Category = React.memo(() => {
-  const [allProducts, setallProducts] = useState([])
+  //filter
+  const [selectedSize, setselectedSize] = useState(0);
+  const [price, setPrice] = useState({
+    minIndex: 0,
+    maxIndex: 0,
+  });
+
+  const [selectedColor, setselectedColor] = useState(0);
+  const [selectedRating, setselectedRating] = useState(0);
+  const [sort, setSort] = useState(null);
+  //filter
 
   // GET ALL PRODUCTS FROM API
 
   useEffect(() => {
-    // &min_price=750&max_price=800&color=%23b71f1f&size=Impedit exercitatio&sort=high 
-    fetch(`https://siedra-shop.com/api/products/?offset=0&limit=12`, requestOptions)
+    // &min_price=750&max_price=800&color=%23b71f1f&size=Impedit exercitatio&sort=high
+    setOffset(0);
+    fetch(
+      `https://siedra-shop.com/api/products/?offset=0&limit=12&min_price=${
+        price.minIndex
+      }${price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""}${
+        sort ? `&sort=${sort}` : ""
+      }`,
+      requestOptions
+    )
       .then((response) => response.json())
-      .then((result) => setallProducts(result.data.products))
+      .then((result) => {
+        setallProducts(result.data.products);
+        if (result.data.products.length < 12) {
+          sethideShowMore(true);
+        } else {
+          sethideShowMore(false);
+        }
+      })
       .catch((error) => console.error(error));
-  }, [])
-  
+  }, [price, sort]);
+
+  const handleShowMore = () => {
+    const changedOffset = offset + 12;
+    setOffset(offset + 12);
+
+    fetch(
+      `https://siedra-shop.com/api/products/?offset=${changedOffset}&limit=12&min_price=${
+        price.minIndex
+      }${price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""}${
+        sort ? `&sort=${sort}` : ""
+      }`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setallProducts([...allProducts, ...result.data.products]);
+        if (result.data.products.length < 12) sethideShowMore(true);
+      })
+      .catch((error) => console.error(error));
+  };
+
   return (
     <div className="container m-auto">
       <div className="top bg-white my-1 flex max-sm:flex-col max-sm:gap-3 justify-between items-center px-5 py-2 rounded-lg">
@@ -38,20 +85,22 @@ const Category = React.memo(() => {
                 <a>Home</a>
               </li>
               <li>
-                <a>Men's Fashion</a>
+                {allProductsPage ? <a>All Products</a> : <a>Men's Fashion</a>}
               </li>
             </ul>
           </div>
-          <h1 className="text-2xl font-bold">Men's Fashion</h1>
-        </div>
-        <div className="join">
-          <button className="join-item btn px-3">«</button>
-          <button className="join-item btn px-3">Page 22</button>
-          <button className="join-item btn px-3">»</button>
         </div>
       </div>
       <div className="flex gap-1 mb-1">
-      <CategoryComp />
+        <CategoryComp
+          setPrice={setPrice}
+          setselectedColor={setselectedColor}
+          selectedColor={selectedColor}
+          setselectedRating={setselectedRating}
+          setselectedSize={setselectedSize}
+          selectedSize={selectedSize}
+          price={price}
+        />
         <div className="flex-[6] ">
           <div className="banar m-3 rounded-lg overflow-hidden">
             <img
@@ -63,40 +112,56 @@ const Category = React.memo(() => {
           <div className="mt-1 bg-white rounded-lg p-3">
             <div className="space-y-5">
               <div className="flex items-start justify-between gap-4 max-sm:gap-2">
-                <div className="flex items-center gap-2 flex-wrap">
-                  {[...Array(7)].map((_, i) => {
-                    return (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {(price.maxIndex !== 0 || price.minIndex !== 0) && (
                       <div className="selected flex gap-2 bg-gray-200 w-fit items-center px-2 py-1 rounded-xl">
-                        <span className="text-gray-700 text-xs">Showing</span>
-                        <span className="text-gray-900 cursor-pointer font-semibold ">
+                        <span className="text-gray-700 text-xs">
+                          Price from ({price.minIndex} $) to ({price.maxIndex}{" "}
+                          $)
+                        </span>
+                        <span
+                          className="text-gray-900 cursor-pointer font-semibold "
+                          onClick={() =>
+                            setPrice({
+                              minIndex: 0,
+                              maxIndex: 0,
+                            })
+                          }
+                        >
                           x
                         </span>
                       </div>
-                    );
-                  })}
-                  <div className="selected flex gap-2 bg-indigo-100 w-fit items-center px-2 py-1 rounded-xl cursor-pointer">
-                    <span className="text-gray-700 text-xs">Clear</span>
+                    )}
+                    {(price.maxIndex !== 0 || price.minIndex !== 0) && (
+                    <div className="selected flex gap-2 bg-indigo-100 w-fit items-center px-2 py-1 rounded-xl cursor-pointer">
+                      <span
+                        className="text-gray-700 text-xs"
+                        onClick={() =>
+                          setPrice({
+                            minIndex: 0,
+                            maxIndex: 0,
+                          })
+                        }
+                      >
+                        Clear
+                      </span>
+                    </div>
+                    )}
                   </div>
-                </div>
-                <select className="select select-bordered max-w-xs">
-                  <option disabled selected>
+                <select
+                  className="select select-bordered max-w-xs"
+                  onChange={(e) => setSort(e.target.value)}
+                >
+                  <option disabled selected className="">
                     Sort By
                   </option>
-                  <option>Han Solo</option>
-                  <option>Greedo</option>
+                  <option className="text-base" value="low">
+                    Sort price from low to high
+                  </option>
+                  <option className="text-base" value="high">
+                    Sort price from high to low
+                  </option>
                 </select>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className=" p-1">
-                  <span className="text-gray-500">Showing</span>
-                  <span className="text-gray-500">1-12 of 1000</span>
-                </div>
-                <label
-                  htmlFor="my-drawer"
-                  className="btn drawer-button bg-indigo-500 hidden max-md:flex"
-                >
-                  <PiSlidersDuotone size={24} color="white" />
-                </label>
               </div>
             </div>
           </div>
@@ -110,11 +175,22 @@ const Category = React.memo(() => {
                 className="drawer-overlay "
               ></label>
               <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content relative">
-                <label htmlFor="my-drawer" className="close absolute top-5 right-5">
+                <label
+                  htmlFor="my-drawer"
+                  className="close absolute top-5 right-5"
+                >
                   <IoMdClose size={24} color="black" />
                 </label>
-                <CategoryComp mobile />
-                
+                <CategoryComp
+                  mobile
+                  setPrice={setPrice}
+                  setselectedColor={setselectedColor}
+                  selectedColor={selectedColor}
+                  setselectedRating={setselectedRating}
+                  setselectedSize={setselectedSize}
+                  selectedSize={selectedSize}
+                  price={price}
+                />
               </ul>
             </div>
           </div>
@@ -131,9 +207,11 @@ const Category = React.memo(() => {
                       <IoHeartOutline size={18} />
                     </button>
                   </div>
-                  {item.sale > 0 &&(<div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
-                    {item.sale}%
-                  </div>)}
+                  {item.sale > 0 && (
+                    <div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
+                      {item.sale}%
+                    </div>
+                  )}
                   <div className="image p-2 w-full rounded-lg">
                     <img
                       src={item?.images?.[0]?.link}
@@ -149,26 +227,41 @@ const Category = React.memo(() => {
                   </span>
                   <div className="flex text-yellow-500">
                     {[...Array(5)].map((_, i) => {
-                      return item.rating > i ? <AiFillStar /> : <AiOutlineStar />;
+                      return item.rating > i ? (
+                        <AiFillStar />
+                      ) : (
+                        <AiOutlineStar />
+                      );
                     })}
                   </div>
                   <span className="truncate w-full text-center text-base font-bold flex items-center gap-3 justify-center">
-                    $ {item.price - (item.price * item.sale) / 100}
-                    <span className="line-through text-gray-400 font-semibold">
-                     $ {item.price}
-                    </span>
+                    {item.sale && item.sale !== 0 ? (
+                      <>
+                        ${" "}
+                        {(
+                          item.price -
+                          (item.price * item.sale.Value) / 100
+                        ).toFixed(2)}
+                        <span className="line-through text-gray-400 font-semibold">
+                          $ {item.price}
+                        </span>
+                      </>
+                    ) : (
+                      <> $ {item.price}</>
+                    )}
                   </span>
                   <div className="flex flex-wrap gap-1 pt-2 pb-4 px-4 justify-center">
-                    {item.colors && item.colors.map((_, i) => {
-                      return (
-                        <div
-                          className="colors w-[26px] h-[26px] rounded-full"
-                          style={{
-                            backgroundColor: item.colors[i].color_code,
-                          }}
-                        ></div>
-                      );
-                    })}
+                    {item.colors &&
+                      item.colors.map((_, i) => {
+                        return (
+                          <div
+                            className="colors w-[26px] h-[26px] rounded-full"
+                            style={{
+                              backgroundColor: item.colors[i].color_code,
+                            }}
+                          ></div>
+                        );
+                      })}
                   </div>
                 </div>
               </Link>
@@ -182,11 +275,14 @@ const Category = React.memo(() => {
                   <span className="text-gray-500">Showing</span>
                   <span className="text-gray-500">1-12 of 1000</span>
                 </div>
-                <div className="join">
-                  <button className="join-item btn px-3">«</button>
-                  <button className="join-item btn px-3">Page 22</button>
-                  <button className="join-item btn px-3">»</button>
-                </div>
+                {!hideShowMore && (
+                  <button
+                    className="btn btn-outline btn-error hover:!text-white"
+                    onClick={() => handleShowMore()}
+                  >
+                    Show More Products
+                  </button>
+                )}
               </div>
             </div>
           </div>
