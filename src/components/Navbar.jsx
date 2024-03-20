@@ -1,18 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import logo from "../assets/logo.png";
-import { IoChatboxEllipsesOutline } from "react-icons/io5";
+import { IoChatboxEllipsesOutline, IoHomeOutline } from "react-icons/io5";
 import { IoPersonOutline } from "react-icons/io5";
 import { IoHeartOutline } from "react-icons/io5";
 import { IoBagOutline } from "react-icons/io5";
 import { IoGlobeOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IoEnterOutline } from "react-icons/io5";
 import { IoExitOutline } from "react-icons/io5";
+import { IoCartOutline } from "react-icons/io5";
+import { GoArrowUpLeft } from "react-icons/go";
 
 const Navbar = () => {
   const [openNav, setopenNav] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [searchedProd, setSearchedProd] = useState([]);
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,8 +40,49 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const currentElementRef = useRef(null);
+  const inputElementRef = useRef(null);
+  const inputElementRef2 = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        currentElementRef.current &&
+        !currentElementRef.current.contains(event.target) &&
+        inputElementRef.current &&
+        !inputElementRef.current.contains(event.target) &&
+        inputElementRef2.current &&
+        !inputElementRef2.current.contains(event.target)
+      ) {
+        setSearch("");
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (search.length < 1) return;
+    fetch(
+      `https://siedra-shop.com/api/products/search?name=${search}`,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => setSearchedProd(result.data.products))
+      .catch((error) => console.error(error));
+  }, [search]);
+  const location = useLocation().pathname;
+  useEffect(() => {
+    setSearch("");
+  }, [location]);
+
   return (
-    <>
+    <div className="relative">
       <div
         className={`navbar mx-auto bg-base-100 justify-evenly bg-white ${
           scrolled ? "shadow-xl fixed" : ""
@@ -41,13 +90,8 @@ const Navbar = () => {
         style={{ transition: "0.5s" }}
       >
         <div className="navbar-start gap-5 w-fit max-sm:w-full max-sm:justify-evenly">
-          <div className={`dropdown `}>
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost md:hidden"
-              onClick={() => setopenNav(!openNav)}
-            >
+          <details className="dropdown hidden max-md:block">
+            <summary className="m-1 btn">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -62,17 +106,27 @@ const Navbar = () => {
                   d="M4 6h16M4 12h8m-8 6h16"
                 />
               </svg>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow-xl bg-base-100 rounded-box min-w-[280px] max-md:w-[400px] max-sm:w-auto"
-            >
-              {/* <li className="pt-2">
-                <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
-                  <IoChatboxEllipsesOutline className="text-lg" />
-                  <span className="text-sm">Service</span>
+            </summary>
+
+            <ul className="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow-xl bg-base-100 rounded-box min-w-[280px] max-md:w-[400px] max-sm:w-auto">
+              <li className="pt-2">
+                <a
+                  className="item cursor-pointer text-gray-500 flex gap-1 items-center"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  <IoHomeOutline className="text-lg" />
+                  <span className="text-sm">Home</span>
                 </a>
-              </li> */}
+              </li>
+              <li className="pt-2">
+                <a
+                  className="item cursor-pointer text-gray-500 flex gap-1 items-center"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  <IoCartOutline className="text-lg" />
+                  <span className="text-sm">Shop</span>
+                </a>
+              </li>
               <li className="pt-2">
                 <a
                   className="item cursor-pointer text-gray-500 flex gap-1 items-center"
@@ -125,16 +179,27 @@ const Navbar = () => {
                 </a>
               </li>
             </ul>
-          </div>
+          </details>
           <Link to="/">
             <a className="text-xl">
-              <img src={logo} alt="Logo" className=" h-[50px] min-w-[108px] object-contain" />
+              <img
+                src={logo}
+                alt="Logo"
+                className=" h-[50px] min-w-[108px] object-contain"
+              />
             </a>
           </Link>
           <div className="navbar-center flex">
             <ul className="menu menu-horizontal px-1 max-sm:hidden">
               <label className="input input-bordered flex items-center gap-2 rounded-3xl py-0 h-10">
-                <input type="text" className="grow" placeholder="Search" />
+                <input
+                  onChange={(e) => setSearch(e.target.value)}
+                  type="text"
+                  className="grow"
+                  placeholder="Search"
+                  value={search}
+                  ref={inputElementRef}
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16"
@@ -156,6 +221,18 @@ const Navbar = () => {
             <IoChatboxEllipsesOutline className="text-lg" />
             <span className="text-sm">Service</span>
           </div> */}
+          <Link to="/">
+            <div className="item text-center cursor-pointer text-gray-500 flex flex-col gap-1 items-center justify-center">
+              <IoHomeOutline className="text-lg" />
+              <span className="text-sm">Home</span>
+            </div>
+          </Link>
+          <Link to="/products">
+            <div className="item text-center cursor-pointer text-gray-500 flex flex-col gap-1 items-center justify-center">
+              <IoCartOutline className="text-lg" />
+              <span className="text-sm">Shop</span>
+            </div>
+          </Link>
           <details className="dropdown">
             <summary className="m-1 btn !p-0 !bg-transparent !border-0 !shadow-none">
               <div className="item text-center cursor-pointer text-gray-500 flex flex-col gap-1 items-center justify-center">
@@ -182,6 +259,7 @@ const Navbar = () => {
               </Link>
             </ul>
           </details>
+
           <Link to="/wishlist">
             <div className="item text-center cursor-pointer text-gray-500 flex flex-col gap-1 items-center justify-center">
               <IoHeartOutline className="text-lg" />
@@ -201,7 +279,14 @@ const Navbar = () => {
         </div>
       </div>
       <label className="container w-4/5 m-auto hidden max-sm:flex input input-bordered flex items-center gap-2 rounded-3xl py-0 h-10">
-        <input type="text" className="grow" placeholder="Search" />
+        <input
+          onChange={(e) => setSearch(e.target.value)}
+          type="text"
+          className="grow"
+          placeholder="Search"
+          value={search}
+          ref={inputElementRef2}
+        />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -215,22 +300,72 @@ const Navbar = () => {
           />
         </svg>
       </label>
-
-      {/* <div className="drawer">
-  <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-  <div className="drawer-content">
-    <label htmlFor="my-drawer" className="btn btn-primary drawer-button">Open drawer</label>
-  </div> 
-  <div className="drawer-side">
-    <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-    <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-      <li><a>Sidebar Item 1</a></li>
-      <li><a>Sidebar Item 2</a></li>
-      
-    </ul>
-  </div>
-</div> */}
-    </>
+      {search.length > 1 && (
+        <div
+          className="w-[35%] max-xl:w-[45%] max-lg:w-3/4 max-md:w-[90%] bg-white rounded-2xl absolute z-[99999] md:ml-[10%] max-md:mx-[5%] mt-1 px-3 py-2 shadow-xl"
+          ref={currentElementRef}
+        >
+          {searchedProd.length > 0 ? (
+            <>
+              {searchedProd.slice(0, 4).map((item, i) => {
+                return (
+                  <Link to={`/product/${item.name_du}`} key={item.id}>
+                    <div className="item bg-gray-100 p-2 rounded-lg my-1 flex items-center justify-between gap-5">
+                      <div className="flex items-center gap-5">
+                        <img
+                          src={item.images?.[0] ? item.images[0].link : ""}
+                          alt=""
+                          className="w-14 h-14 rounded-lg object-cover"
+                        />
+                        <div className="flex flex-col gap-1">
+                          <span className="text-sm truncate">
+                            {item.name_du}
+                          </span>
+                          <span className="text-xs text-gray-500 truncate">
+                            {item.category.name_du}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-5">
+                        <span className="truncate w-full text-sm font-bold flex gap-1 flex-col justify-center max-sm:hidden">
+                          {item.sale && item.sale !== 0 ? (
+                            <>
+                              {(
+                                item.price -
+                                (item.price * item.sale.Value) / 100
+                              ).toFixed(2)}
+                              <span className="line-through text-gray-400 font-semibold">
+                                $ {item.price}
+                              </span>
+                            </>
+                          ) : (
+                            <>$ {item.price}</>
+                          )}
+                        </span>
+                        <span className="text-lg px-3 text-[#5137ff]">
+                          <GoArrowUpLeft />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </>
+          ) : (
+            <div className="justify-center item bg-gray-100 p-2 rounded-lg my-1 flex items-center gap-5">
+              No Products Found
+            </div>
+          )}
+          {searchedProd.length > 4 && (
+            <Link to={`/search/${search}`}>
+              <button className="btn btn-outline btn-error hover:!text-white w-full">
+                Show All Products
+              </button>
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 

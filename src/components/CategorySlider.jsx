@@ -87,7 +87,7 @@ const CategorySlider = () => {
         swipeable
       >
         {categories?.map((item, i) => (
-          <Link to="/category/1">
+          <Link to={`/category/${item.name_du}`} >
             <div
               key={item.id}
               className="rounded-full flex flex-col justify-center items-center gap-4"
@@ -96,11 +96,11 @@ const CategorySlider = () => {
                 <img
                   src={item.Image_link}
                   alt="category"
-                  className="rounded-full w-[100px] h-[100px] max-sm:w-[70px] max-sm:h-[70px]"
+                  className="rounded-full w-[100px] h-[100px] max-sm:w-[70px] max-sm:h-[70px] object-cover"
                 />
               </div>
               <span className="truncate w-full text-center text-sm">
-                {item.name_ar}
+                {item.name_du}
               </span>
             </div>
           </Link>

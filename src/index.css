@@ -154,3 +154,7 @@ input:checked + .slider:before {
 .steps .step-error:after{
   background-color: #5137ff;
 }
+
+.collapse-title-without-arrow::after{
+display: none !important;
+}
