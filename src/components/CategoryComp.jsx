@@ -12,6 +12,8 @@ const CategoryComp = React.memo(
     setselectedSize,
     selectedSize,
     price,
+    setDiscountProducts,
+    discountProducts,
   }) => {
     const [categories, setcategories] = useState([]);
     useEffect(() => {
@@ -61,20 +63,19 @@ const CategoryComp = React.memo(
                     type="radio"
                     name="my-accordion-4"
                     className="min-h-0 w-[40%] ml-auto"
-
                   />
-                  {category.subs.length > 0 ?(
-                  <div className="collapse-title font-medium min-h-0 p-[0.8rem]">
-                    <Link to={`/category/${category.name_du}`}>
-                    {category.name_du}
-                    </Link>
-                  </div>
-                  ):(
-                  <div className="collapse-title collapse-title-without-arrow font-medium min-h-0 p-[0.8rem]">
-                    <Link to={`/category/${category.name_du}`}>
-                    {category.name_du}
-                    </Link>
-                  </div>
+                  {category.subs.length > 0 ? (
+                    <div className="collapse-title font-medium min-h-0 p-[0.8rem]">
+                      <Link to={`/category/${category.name_du}`}>
+                        {category.name_du}
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="collapse-title collapse-title-without-arrow font-medium min-h-0 p-[0.8rem]">
+                      <Link to={`/category/${category.name_du}`}>
+                        {category.name_du}
+                      </Link>
+                    </div>
                   )}
                   {category.subs.length > 0 && (
                     <div className="collapse-content bg-gray-100 !p-0">
@@ -82,8 +83,12 @@ const CategoryComp = React.memo(
                         {category.subs.map((subCategory) => {
                           return (
                             <Link to={`/sub-category/${subCategory.name_du}`}>
-
-                              <li key={subCategory.id} className="py-1 cursor-pointer whitespace-nowrap">- {subCategory.name_du}</li>
+                              <li
+                                key={subCategory.id}
+                                className="py-1 cursor-pointer whitespace-nowrap"
+                              >
+                                - {subCategory.name_du}
+                              </li>
                             </Link>
                           );
                         })}
@@ -219,7 +224,7 @@ const CategoryComp = React.memo(
             Discounted Items
           </div>
           <label class="switch">
-            <input type="checkbox" />
+            <input type="checkbox" onChange={(e)=>setDiscountProducts(e.target.checked)} />
             <span class="slider"></span>
           </label>
         </div>

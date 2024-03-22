@@ -10,6 +10,8 @@ import Login from './pages/Login';
 import VarifyEmail from './pages/VarifyEmail';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
+import { useDispatch } from 'react-redux';
+import { setCartItems } from './Slice/cartSlice';
 
 function AppLayout() {
   return (
@@ -87,6 +89,10 @@ const router = createBrowserRouter([
   },
 ]);
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setCartItems(JSON.parse(localStorage.getItem('cart')) || []))
+  }, [])
   return <RouterProvider router={router} />;
 }
 

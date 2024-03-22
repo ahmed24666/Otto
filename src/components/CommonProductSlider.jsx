@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Carousel from "react-multi-carousel";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import model from "../assets/model.avif";
 import { Link } from "react-router-dom";
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
-import {  IoHeartOutline } from "react-icons/io5";
+import { IoHeartOutline } from "react-icons/io5";
 
-const CommonProductSlider = ({ title }) => {
+const CommonProductSlider = ({ title, arrayOfProducts=[...Array(10)] }) => {
+  
   return (
     <div className="container m-auto secPadding flex flex-col gap-8 ">
       <h1 className="text-lg font-semibold">{title}</h1>
@@ -80,54 +81,74 @@ const CommonProductSlider = ({ title }) => {
         slidesToSlide={1}
         swipeable
       >
-        {[...Array(10)].map((_, i) => (
-          <Link to="/product/1">
-            <div
-              key={i}
-              className="rounded-2xl bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px] max-[473px]:h-auto relative"
-            >
-              
-              <div className="love absolute bg-white shadow-lg rounded-full flex justify-center items-center top-5 right-5 w-8 h-8">
-                <button className="">
-                  <IoHeartOutline size={18} />
-                </button>
-              </div>
-              <div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1 max-[473px]:text-xs">
-                -15%
-              </div>
-              <div className="image p-2 w-full rounded-lg">
-                <img
-                  src={model}
-                  alt="category"
-                  className="rounded-lg w-full aspect-[1/1] max-md:h-[242px] object-cover max-[473px]:h-[200px]"
-                />
-              </div>
-              <span className="truncate w-full text-center text-xs text-gray-500">
-                Mens Wear , T-shirt
-              </span>
-              <span className="truncate w-full text-center text-sm font-semibold max-[473px]:px-3">
-                Black Men Casual Belt
-              </span>
-              {/* <div className="flex text-yellow-500">
+        
+        {arrayOfProducts?.map((item, i) => (
+            <Link to={`/product/${item?.name_du}`}>
+              <div
+                key={i}
+                className="rounded-2xl bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px] max-[473px]:h-auto relative"
+              >
+                <div className="love absolute bg-white shadow-lg rounded-full flex justify-center items-center top-5 right-5 w-8 h-8">
+                  <button className="">
+                    <IoHeartOutline size={18} />
+                  </button>
+                </div>
+                {item?.sale !== 0 && (
+                  <div className="love absolute bg-indigo-600 shadow-lg rounded-lg text-white flex justify-center items-center top-4 left-5 px-2 text-sm p-1">
+                    -{item?.sale.Value}%
+                  </div>
+                )}
+                <div className="image p-2 w-full rounded-lg">
+                  <img
+                    src={model}
+                    alt="category"
+                    className="rounded-lg w-full aspect-[1/1] max-md:h-[242px] object-cover max-[473px]:h-[200px]"
+                  />
+                </div>
+                <span className="truncate w-full text-center text-xs text-gray-500">
+                  {item?.category.name_du}
+                </span>
+                <span className="truncate w-full text-center text-sm font-semibold max-[473px]:px-3">
+                  {item?.name_du}
+                </span>
+                {/* <div className="flex text-yellow-500">
                 {[...Array(5)].map((_, i) => {
                   return 2 > i ? <AiFillStar /> : <AiOutlineStar />;
                 })}
               </div> */}
-              <span className="truncate w-full text-center text-base font-bold max-[473px]:text-sm">
-                $ 20.00
-              </span>
-              <div className="flex flex-wrap gap-1 pt-2 pb-4 px-4 justify-center">
-                {[...Array(5)].map((_, i) => {
-                  return (
-                    <div
-                      className="colors w-[26px] h-[26px] max-[473px]:w-[20px] max-[473px]:h-[20px] rounded-full bg-indigo-600"
-                    ></div>
-                  );
-                })}
+                <span className="truncate w-full text-center text-base font-bold flex items-center gap-3 justify-center">
+                  {item?.sale && item?.sale !== 0 ? (
+                    <>
+                      ${" "}
+                      {(
+                        item?.price -
+                        (item?.price * item?.sale.Value) / 100
+                      ).toFixed(2)}
+                      <span className="line-through text-gray-400 font-semibold">
+                        $ {item?.price}
+                      </span>
+                    </>
+                  ) : (
+                    <> $ {item?.price}</>
+                  )}
+                </span>
+                {item?.colors && (
+                  <div className="flex flex-wrap gap-1 pt-2 pb-4 px-4 justify-center">
+                    {item?.colors?.map((color, i) => {
+                      return (
+                        <div
+                          className="colors w-[26px] h-[26px] rounded-full"
+                          style={{
+                            backgroundColor: color,
+                          }}
+                        ></div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))}
       </Carousel>
     </div>
   );

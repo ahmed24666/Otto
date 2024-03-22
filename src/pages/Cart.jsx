@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ProductImage from "../assets/model.avif";
 import { MdClose } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, removeFromCart, removeOneItemFromCart } from "../Slice/cartSlice";
+import { AiOutlineDelete } from "react-icons/ai";
 
 const Cart = ({ wish }) => {
+  const dispatch = useDispatch();
+
+ const CartItems= useSelector((state) => state.cart)
+ useEffect(() => {
+   console.warn(CartItems?.items)
+ }, [CartItems?.items])
+ 
   return (
     <div className="container m-auto">
       {!wish && (
@@ -34,21 +44,19 @@ const Cart = ({ wish }) => {
               </tr>
             </thead>
             <tbody>
-              {[...Array(5)].map((_, i) => {
+              {CartItems?.items?.map((item, i) => {
                 return (
                   <tr key={i}>
                     <td>
                       <img
-                        src={ProductImage}
+                        src={item?.images[0].link}
                         className="w-24 h-24 object-contain"
                         alt=""
                       />
                     </td>
                     <td className="space-y-3">
                       <h4 className="w-[400px] font-bold">
-                        My home Unisex Bathrobe Vanessa, Long Form, Cotton,
-                        Kimono Collar, Belt, Pockets, Women & Men, Waffle Piqué,
-                        Light Quality, S-3XL
+                        {item?.name_du}
                       </h4>
                       <p>S | 120 cm, berry</p>
                       <p className="text-gray-500">(€ 23,99)</p>
@@ -59,11 +67,11 @@ const Cart = ({ wish }) => {
                     {!wish && (
                       <td>
                         <div className="flex items-center">
-                          <button className="btn btn-outline btn-error text-xl hover:!text-white">
+                          <button className="btn btn-outline btn-error text-xl hover:!text-white" onClick={()=>dispatch(removeOneItemFromCart(item?.id))}>
                             -
                           </button>
-                          <span className="mx-1 p-3">1</span>
-                          <button className="btn btn-outline btn-error text-xl hover:!text-white" style={{outlineColor:"#5137ff !important" ,color:"#5137ff !important"}}>
+                          <span className="mx-1 p-3">{item?.quantity}</span>
+                          <button className="btn btn-outline btn-error text-xl hover:!text-white" style={{outlineColor:"#5137ff !important" ,color:"#5137ff !important"}} onClick={()=>dispatch(addToCart(item))}>
                             +
                           </button>
                         </div>
@@ -76,13 +84,21 @@ const Cart = ({ wish }) => {
                       </p>
                     </td>
                     <td>
-                      <button className="text-indigo-600 text-lg">
-                        <MdClose />
+                      <button className="text-indigo-600 text-lg" onClick={()=>dispatch(removeFromCart(item?.id))}>
+                        <AiOutlineDelete size={22} className="text-red-500" />
                       </button>
                     </td>
                   </tr>
                 );
               })}
+               {CartItems?.items?.length < 1 && (
+                <tr>
+                  <td colSpan="5">
+                    <h3 className="text-center text-gray-500 text-lg">No items in cart</h3>
+                  </td>
+                </tr>
+
+              )}
             </tbody>
           </table>
         </div>

@@ -17,6 +17,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [searchedProd, setSearchedProd] = useState([]);
+  const [hideSearchBar, setHideSearchBar] = useState(false);
   const requestOptions = {
     method: "GET",
     redirect: "follow",
@@ -79,6 +80,11 @@ const Navbar = () => {
   const location = useLocation().pathname;
   useEffect(() => {
     setSearch("");
+    if (location.includes("/search")) {
+      setHideSearchBar(true);
+    } else {
+      setHideSearchBar(false);
+    }
   }, [location]);
 
   return (
@@ -189,32 +195,34 @@ const Navbar = () => {
               />
             </a>
           </Link>
-          <div className="navbar-center flex">
-            <ul className="menu menu-horizontal px-1 max-sm:hidden">
-              <label className="input input-bordered flex items-center gap-2 rounded-3xl py-0 h-10">
-                <input
-                  onChange={(e) => setSearch(e.target.value)}
-                  type="text"
-                  className="grow"
-                  placeholder="Search"
-                  value={search}
-                  ref={inputElementRef}
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="w-4 h-4 opacity-70"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                    clipRule="evenodd"
+          {!hideSearchBar && (
+            <div className="navbar-center flex">
+              <ul className="menu menu-horizontal px-1 max-sm:hidden">
+                <label className="input input-bordered flex items-center gap-2 rounded-3xl py-0 h-10">
+                  <input
+                    onChange={(e) => setSearch(e.target.value)}
+                    type="text"
+                    className="grow"
+                    placeholder="Search"
+                    value={search}
+                    ref={inputElementRef}
                   />
-                </svg>
-              </label>
-            </ul>
-          </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 16 16"
+                    fill="currentColor"
+                    className="w-4 h-4 opacity-70"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </label>
+              </ul>
+            </div>
+          )}
         </div>
         <div className="navbar-end flex gap-4 max-md:hidden">
           {/* <div className="item text-center cursor-pointer text-gray-500 flex flex-col gap-1 items-center justify-center">
@@ -278,28 +286,30 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <label className="container w-4/5 m-auto hidden max-sm:flex input input-bordered flex items-center gap-2 rounded-3xl py-0 h-10">
-        <input
-          onChange={(e) => setSearch(e.target.value)}
-          type="text"
-          className="grow"
-          placeholder="Search"
-          value={search}
-          ref={inputElementRef2}
-        />
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 16 16"
-          fill="currentColor"
-          className="w-4 h-4 opacity-70"
-        >
-          <path
-            fillRule="evenodd"
-            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-            clipRule="evenodd"
+      {!hideSearchBar && (
+        <label className="container w-4/5 m-auto hidden max-sm:flex input input-bordered flex items-center gap-2 rounded-3xl py-0 h-10">
+          <input
+            onChange={(e) => setSearch(e.target.value)}
+            type="text"
+            className="grow"
+            placeholder="Search"
+            value={search}
+            ref={inputElementRef2}
           />
-        </svg>
-      </label>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            className="w-4 h-4 opacity-70"
+          >
+            <path
+              fillRule="evenodd"
+              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </label>
+      )}
       {search.length > 1 && (
         <div
           className="w-[35%] max-xl:w-[45%] max-lg:w-3/4 max-md:w-[90%] bg-white rounded-2xl absolute z-[99999] md:ml-[10%] max-md:mx-[5%] mt-1 px-3 py-2 shadow-xl"

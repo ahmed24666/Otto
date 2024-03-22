@@ -14,33 +14,45 @@ import sp4 from "../assets/sp4.avif";
 import sp5 from "../assets/sp5.avif";
 import CommonProductSlider from "../components/CommonProductSlider";
 import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../Slice/cartSlice";
 
 const images2 = [
-  { 
-    original: "https://siedra-shop.com/admin/uploads/images/items-images/6338_Azzrk.jpg", 
-    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/6338_Azzrk.jpg", 
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
+  {
+    original:
+      "https://siedra-shop.com/admin/uploads/images/items-images/6338_Azzrk.jpg",
+    thumbnail:
+      "https://siedra-shop.com/admin/uploads/images/items-images/6338_Azzrk.jpg",
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
   },
-  { 
-    original: "https://siedra-shop.com/admin/uploads/images/items-images/4171_profile Logo.jpg", 
-    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/4171_profile Logo.jpg", 
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
+  {
+    original:
+      "https://siedra-shop.com/admin/uploads/images/items-images/4171_profile Logo.jpg",
+    thumbnail:
+      "https://siedra-shop.com/admin/uploads/images/items-images/4171_profile Logo.jpg",
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
   },
-  { 
-    original: "https://siedra-shop.com/admin/uploads/images/items-images/1179_profile.jpg", 
-    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/1179_profile.jpg", 
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
+  {
+    original:
+      "https://siedra-shop.com/admin/uploads/images/items-images/1179_profile.jpg",
+    thumbnail:
+      "https://siedra-shop.com/admin/uploads/images/items-images/1179_profile.jpg",
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
   },
-  { 
-    original: "https://siedra-shop.com/admin/uploads/images/items-images/4876_128262500.jpeg", 
-    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/4876_128262500.jpeg", 
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
+  {
+    original:
+      "https://siedra-shop.com/admin/uploads/images/items-images/4876_128262500.jpeg",
+    thumbnail:
+      "https://siedra-shop.com/admin/uploads/images/items-images/4876_128262500.jpeg",
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
   },
-  { 
-    original: "https://siedra-shop.com/admin/uploads/images/items-images/1161_Azzrk.jpg", 
-    thumbnail: "https://siedra-shop.com/admin/uploads/images/items-images/1161_Azzrk.jpg", 
-    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full" 
-  }
+  {
+    original:
+      "https://siedra-shop.com/admin/uploads/images/items-images/1161_Azzrk.jpg",
+    thumbnail:
+      "https://siedra-shop.com/admin/uploads/images/items-images/1161_Azzrk.jpg",
+    originalClass: "h-[600px] max-md:h-[350px] object-contain w-full",
+  },
 ];
 
 const sizes = [
@@ -54,14 +66,20 @@ const sizes = [
   "5XL (72/74)",
 ];
 const SingleProduct = ({ note }) => {
+  const dispatch = useDispatch();
   const [product, setProduct] = useState({});
+  const [productRecomendations, setProductRecomendations] = useState([])
   const [images, setImages] = useState([...Array(10)]);
-  const [renderPhotos, setrenderPhotos] = useState(false)
+  const [renderPhotos, setrenderPhotos] = useState(false);
   const [selectedColor, setselectedColor] = useState(0);
   const [selectedSize, setselectedSize] = useState(0);
   const [selectedRating, setselectedRating] = useState(0);
+  const CartItems= useSelector((state) => state.cart)
+  useEffect(() => {
+    console.warn(CartItems?.items)
+  }, [CartItems?.items])
 
-  const endDate = `9-25-2024 23:30:00`;
+  const [endDate, setendDate] = useState("9-25-2024 23:30:00");
 
   const [d, setd] = useState(0);
   const [h, seth] = useState(0);
@@ -88,7 +106,7 @@ const SingleProduct = ({ note }) => {
     });
 
     return () => clearInterval(x);
-  }, []);
+  }, [endDate]);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
 
@@ -111,11 +129,11 @@ const SingleProduct = ({ note }) => {
   // GET DATA FROM API
   const params = useParams().id.replaceAll(" ", "-");
 
+  const requestOptions = {
+    method: "GET",
+    redirect: "follow",
+  };
   useEffect(() => {
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow",
-    };
 
     fetch(
       `https://siedra-shop.com/api/products/product/${params}`,
@@ -124,8 +142,18 @@ const SingleProduct = ({ note }) => {
       .then((response) => response.json())
       .then((result) => setProduct(result.data.product))
       .catch((error) => console.error(error));
+    fetch(
+      "https://siedra-shop.com/api/products/recommendation",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => setProductRecomendations(result.data.products))
+      .catch((error) => console.error(error));
   }, []);
   useEffect(() => {
+    if (product?.sale?.End_Date) {
+      setendDate(product?.sale?.End_Date);
+    }
     let images = [];
     product?.images?.map((img) => {
       images.push({
@@ -136,9 +164,8 @@ const SingleProduct = ({ note }) => {
       console.log(images);
     });
     setImages(images);
-    setrenderPhotos(true)
+    setrenderPhotos(true);
   }, [product]);
-
 
   return (
     <div className="container m-auto">
@@ -149,46 +176,40 @@ const SingleProduct = ({ note }) => {
         </h1>
         <div className="flex text-yellow-500 text-2xl max-md:text-lg items-center gap-1">
           {[...Array(5)].map((_, i) => {
-            return product.rating > i ? <AiFillStar /> : <AiOutlineStar />;
+            return product?.rating > i ? <AiFillStar /> : <AiOutlineStar />;
           })}
-          ({product.ratingCount})
+          ({product?.ratingCount})
         </div>
       </div>
       <div className="flex gap-1 my-1 max-md:flex-col">
         <div className="flex-[4] flex flex-col">
           <div className="w-full bg-white p-4">
             {product?.images && images && renderPhotos && (
-
-            <ReactImageGallery
-              items={images}
-              lazyLoad
-              thumbnailPosition={isMobile ? "bottom" : "left"}
-              infinite
-              showNav={false}
-              showFullscreenButton={false}
-              showPlayButton={false}
-              isRTL={false}
-              autoPlay
-              slideOnThumbnailOver
-            />
+              <ReactImageGallery
+                items={images}
+                lazyLoad
+                thumbnailPosition="bottom"
+                infinite
+                showNav={false}
+                showFullscreenButton={false}
+                showPlayButton={false}
+                isRTL={false}
+                autoPlay
+                slideOnThumbnailOver
+              />
             )}
           </div>
-          <div className="w-full bg-white p-4 max-md:space-y-3 mt-1 space-y-6">
-            <h4 className="text-lg text-black font-semibold">Description :</h4>
-            {[...Array(3)].map((_, i) => {
-              return (
-                <p className="text-gray-500 max-lg:text-sm">
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Saepe nemo dolorem nesciunt voluptate voluptas nulla, quia
-                  laudantium, error iste asperiores quis magnam a in
-                  consequuntur enim dolore maxime explicabo tenetur nobis,
-                  eveniet natus expedita! Quod amet totam, eaque facilis commodi
-                  accusantium voluptas, a fugit nemo, autem cupiditate ipsa
-                  ipsum voluptate.
-                </p>
-              );
-            })}
-          </div>
+          {product?.description_du && (
+            <div className="w-full bg-white p-4 max-md:space-y-3 mt-1 space-y-6">
+              <h4 className="text-lg text-black font-semibold">
+                Description :
+              </h4>
+
+              <p className="text-gray-500 max-lg:text-sm">
+                {product?.description_du}
+              </p>
+            </div>
+          )}
           <div className="w-full bg-white p-4 mt-1 space-y-4 max-md:hidden">
             <h4 className="text-lg text-black font-semibold">
               Rate This Product :
@@ -218,45 +239,49 @@ const SingleProduct = ({ note }) => {
         </div>
         <div className="flex-[3]">
           <div className="bg-white p-4 space-y-6 max-md:space-y-3">
-            <div className="flex flex-col gap-4">
-              <p className="font-semibold text-base text-black">Color :</p>
-              <div className="flex gap-1">
-                {[...Array(5)].map((_, i) => {
-                  return (
-                    <div
-                      className={`${
-                        i === selectedColor ? "border border-black" : ""
-                      } rounded-full p-1 flex justify-center items-center`}
-                      onClick={() => setselectedColor(i)}
-                    >
+            {product?.colors && product?.colors.length > 0 && (
+              <div className="flex flex-col gap-4">
+                <p className="font-semibold text-base text-black">Color :</p>
+                <div className="flex gap-1">
+                  {product?.colors?.map((item, i) => {
+                    return (
                       <div
-                        className="w-8 h-8 max-md:w-6 max-md:h-6 rounded-full cursor-pointer"
-                        style={{ backgroundColor: "gray" }}
-                      ></div>
-                    </div>
-                  );
-                })}
+                        className={`${
+                          i === selectedColor ? "border border-black" : ""
+                        } rounded-full p-1 flex justify-center items-center`}
+                        onClick={() => setselectedColor(i)}
+                      >
+                        <div
+                          className="w-8 h-8 max-md:w-6 max-md:h-6 rounded-full cursor-pointer"
+                          style={{ backgroundColor: item }}
+                        ></div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col gap-4">
-              <p className="font-semibold text-base text-black">Sizes :</p>
-              <div className="flex gap-1 flex-wrap gap-3">
-                {sizes.map((size, i) => {
-                  return (
-                    <div
-                      className={`${
-                        i === selectedSize
-                          ? "border border-[#5137ff]"
-                          : "border border-gray-300"
-                      } rounded-lg p-3 flex justify-center items-center cursor-pointer max-md:text-sm max-md:p-2`}
-                      onClick={() => setselectedSize(i)}
-                    >
-                      {size}
-                    </div>
-                  );
-                })}
+            )}
+            {product?.sizes && product?.sizes.length > 0 && (
+              <div className="flex flex-col gap-4">
+                <p className="font-semibold text-base text-black">Sizes :</p>
+                <div className="flex gap-1 flex-wrap gap-3">
+                  {product?.sizes?.map((size, i) => {
+                    return (
+                      <div
+                        className={`${
+                          i === selectedSize
+                            ? "border border-[#5137ff]"
+                            : "border border-gray-300"
+                        } rounded-lg p-3 flex justify-center items-center cursor-pointer max-md:text-sm max-md:p-2`}
+                        onClick={() => setselectedSize(i)}
+                      >
+                        {size}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
             <div className="flex gap-4 items-center">
               <TbMailbox className="text-2xl text-black" />
               <p className="text-indigo-600 max-md:text-sm">
@@ -267,18 +292,33 @@ const SingleProduct = ({ note }) => {
           <div className="bg-white p-4 space-y-6 max-md:space-y-3 mt-1">
             <div className="flex flex-col gap-4">
               <p className="font-semibold text-base text-black">Price :</p>
+              {product?.sale && product?.sale !== 0 ? (
               <div className="flex items-center gap-4">
                 <div className="px-2 py-1 rounded-lg bg-indigo-600 w-fit text-white max-md:text-sm">
-                  -15%
+                  -{product?.sale?.Value}%
                 </div>
-                <span className=" text-lg text-gray-500 line-through max-md:text-base">
-                  $ 21.99
-                </span>
+                {product?.sale && product?.sale !== 0 && (
+                  <span className=" text-lg text-gray-500 line-through max-md:text-base">
+                    $ {product?.price + product?.shippingPrice}
+                  </span>
+                )}
               </div>
+              ):""}
               <div className="flex flex-col gap-4">
-                <span className="text-indigo-600 text-3xl text-black font-semibold max-md:text-xl">
-                  $ 18.99
-                </span>
+                {product?.sale && product?.sale !== 0 ? (
+                  <span className="text-indigo-600 text-3xl text-black font-semibold max-md:text-xl">
+                    $
+                    {(
+                      product?.shippingPrice +
+                      product?.price -
+                      (product?.price * product?.sale.Value) / 100
+                    ).toFixed(2)}
+                  </span>
+                ) : (
+                  <span className="text-indigo-600 text-3xl text-black font-semibold max-md:text-xl">
+                    $ {product?.price + product?.shippingPrice}
+                  </span>
+                )}
                 <span className="text-gray-500 max-md:text-sm">
                   incl. VAT plus shipping costs
                 </span>
@@ -317,14 +357,12 @@ const SingleProduct = ({ note }) => {
             </div>
           )}
           <div className="bg-white p-4 space-y-4 mt-1">
-            <Link to="/cart">
-              <button className="relative bg-indigo-600 text-white p-3 w-full flex items-center justify-center rounded-lg">
+              <button className="relative bg-indigo-600 text-white p-3 w-full flex items-center justify-center rounded-lg" onClick={()=>dispatch(addToCart(product))}>
                 Add to Cart
                 <span className="absolute top-1/2 left-2 text-2xl translate -translate-y-1/2 text-white rounded-full p-1">
                   <IoBagOutline />
                 </span>
               </button>
-            </Link>
             <button
               className="relative text-black p-3 w-full flex items-center justify-center rounded-lg"
               style={{ backgroundColor: "rgb(236, 236, 236)" }}
@@ -339,19 +377,14 @@ const SingleProduct = ({ note }) => {
               <p className="text-indigo-600">30 days free returns</p>
             </div>
           </div>
-          <div className="bg-white p-4 mt-1 space-y-6 max-md:space-y-3 ">
-            <h4 className="text-lg text-black font-semibold">Note :</h4>
-            {true && (
+          {product?.notes_du && (
+            <div className="bg-white p-4 mt-1 space-y-6 max-md:space-y-3 ">
+              <h4 className="text-lg text-black font-semibold">Note :</h4>
               <p className="text-gray-500 max-md:text-sm">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Saepe
-                nemo dolorem nesciunt voluptate voluptas nulla, quia laudantium,
-                error iste asperiores quis magnam a in consequuntur enim dolore
-                maxime explicabo tenetur nobis, eveniet natus expedita! Quod
-                amet totam, eaque facilis commodi accusantium voluptas, a fugit
-                nemo, autem cupiditate ipsa ipsum voluptate.
+                {product?.notes_du}
               </p>
-            )}
-          </div>
+            </div>
+          )}
           <div className="w-full bg-white p-4 mt-1 space-y-4 hidden max-md:block">
             <h4 className="text-lg text-black font-semibold">
               Rate This Product :
@@ -380,7 +413,7 @@ const SingleProduct = ({ note }) => {
           </div>
         </div>
       </div>
-      <CommonProductSlider title={"Recommendations for you"} />
+      <CommonProductSlider title={"Recommendations for you"} arrayOfProducts={productRecomendations} />
     </div>
   );
 };
