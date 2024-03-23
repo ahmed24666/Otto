@@ -95,97 +95,96 @@ const Navbar = () => {
         }  z-[99999] top-0 `}
         style={{ transition: "0.5s" }}
       >
-        <div className="navbar-start gap-5 w-fit max-sm:w-full max-sm:justify-evenly">
-          <details className="dropdown hidden max-md:block">
-            <summary className="m-1 btn">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </summary>
+        <div className="navbar-start gap-5 max-md:gap-2 max-sm:gap-5 w-fit max-sm:w-full max-sm:justify-evenly">
+          <div className="hidden max-md:flex items-center gap-3">
+            <details className="dropdown ">
+              <summary className="m-1 btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h8m-8 6h16"
+                  />
+                </svg>
+              </summary>
 
-            <ul className="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow-xl bg-base-100 rounded-box min-w-[280px] max-md:w-[400px] max-sm:w-auto">
-              <li className="pt-2">
-                <a
-                  className="item cursor-pointer text-gray-500 flex gap-1 items-center"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <IoHomeOutline className="text-lg" />
-                  <span className="text-sm">Home</span>
-                </a>
-              </li>
-              <li className="pt-2">
-                <a
-                  className="item cursor-pointer text-gray-500 flex gap-1 items-center"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <IoCartOutline className="text-lg" />
-                  <span className="text-sm">Shop</span>
-                </a>
-              </li>
-              <li className="pt-2">
-                <a
-                  className="item cursor-pointer text-gray-500 flex gap-1 items-center"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <IoPersonOutline className="text-lg" />
-                  <span className="text-sm">Account</span>
-                </a>
-              </li>
-              {isOpen && (
-                <>
-                  <Link to="/login">
-                    <li className="pt-2 pl-6 !mt-[-10px]">
-                      <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
-                        <IoEnterOutline className="text-lg" />
-                        <span className="text-xs">Login</span>
-                      </a>
-                    </li>
-                  </Link>
-                  <Link to="/signup">
-                    <li className="pt-2 pl-6 mt-[-10px]">
-                      <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
-                        <IoEnterOutline className="text-lg" />
-                        <span className="text-xs">SignUp</span>
-                      </a>
-                    </li>
-                  </Link>
-                </>
-              )}
-              <Link to="/wishlist">
+              <ul className="menu menu-lg dropdown-content mt-3 z-[1] p-2 shadow-xl bg-base-100 rounded-box min-w-[280px] max-md:w-[400px] max-sm:w-auto">
                 <li className="pt-2">
-                  <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
-                    <IoHeartOutline className="text-lg" />
-                    <span className="text-sm">Wishlist</span>
+                  <a
+                    className="item cursor-pointer text-gray-500 flex gap-1 items-center"
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    <IoHomeOutline className="text-lg" />
+                    <span className="text-sm">Home</span>
                   </a>
                 </li>
-              </Link>
-              <Link to="/cart">
                 <li className="pt-2">
-                  <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
-                    <IoBagOutline className="text-lg" />
-                    <span className="text-sm">Cart</span>
+                  <a
+                    className="item cursor-pointer text-gray-500 flex gap-1 items-center"
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    <IoCartOutline className="text-lg" />
+                    <span className="text-sm">Shop</span>
                   </a>
                 </li>
-              </Link>
-              <li className="pt-2">
-                <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
-                  <IoGlobeOutline className="text-lg" />
-                  <span className="text-sm">Language</span>
-                </a>
-              </li>
-            </ul>
-          </details>
+                <li className="pt-2">
+                  <a
+                    className="item cursor-pointer text-gray-500 flex gap-1 items-center"
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    <IoPersonOutline className="text-lg" />
+                    <span className="text-sm">Account</span>
+                  </a>
+                </li>
+                {isOpen && (
+                  <>
+                    <Link to="/login">
+                      <li className="pt-2 pl-6 !mt-[-10px]">
+                        <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
+                          <IoEnterOutline className="text-lg" />
+                          <span className="text-xs">Login</span>
+                        </a>
+                      </li>
+                    </Link>
+                    <Link to="/signup">
+                      <li className="pt-2 pl-6 mt-[-10px]">
+                        <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
+                          <IoEnterOutline className="text-lg" />
+                          <span className="text-xs">SignUp</span>
+                        </a>
+                      </li>
+                    </Link>
+                  </>
+                )}
+                <Link to="/wishlist">
+                  <li className="pt-2">
+                    <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
+                      <IoHeartOutline className="text-lg" />
+                      <span className="text-sm">Wishlist</span>
+                    </a>
+                  </li>
+                </Link>
+                <li className="pt-2">
+                  <a className="item cursor-pointer text-gray-500 flex gap-1 items-center">
+                    <IoGlobeOutline className="text-lg" />
+                    <span className="text-sm">Language</span>
+                  </a>
+                </li>
+              </ul>
+            </details>
+            <Link to="/cart">
+              <div>
+                <IoBagOutline className="text-lg" />
+              </div>
+            </Link>
+          </div>
           <Link to="/">
             <a className="text-xl">
               <img

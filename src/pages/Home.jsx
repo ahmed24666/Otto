@@ -30,11 +30,11 @@ const Home = () => {
       <CategorySlider/>
       <CommonProductSlider title={"Recommendations for you"} arrayOfProducts={productRecomendations}/>
       <Banar/>
-      <CommonProductSlider title={"Min. 30% reduced for you"}/>
+      <CommonProductSlider title={"Min. 30% reduced for you"} arrayOfProducts={productRecomendations}/>
       <Banar/>
-      <CommonProductSlider title={"Sustainable items for you"}/>
+      <CommonProductSlider title={"Sustainable items for you"} arrayOfProducts={productRecomendations}/>
       <Banar/>
-      <CommonProductSlider title={"Outfits for you"}/>
+      <CommonProductSlider title={"Outfits for you"} arrayOfProducts={productRecomendations}/>
     </div>
   )
 }

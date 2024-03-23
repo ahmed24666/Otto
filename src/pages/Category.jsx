@@ -7,7 +7,7 @@ import { IoHeartOutline } from "react-icons/io5";
 import { PiSlidersDuotone } from "react-icons/pi";
 import { IoMdClose } from "react-icons/io";
 import CategoryComp from "../components/CategoryComp";
-import CategorySlider from "../components/CategorySlider";
+import _debounce from 'lodash/debounce';
 
 const requestOptions = {
   method: "GET",
@@ -17,11 +17,19 @@ const requestOptions = {
 const Category = React.memo(
   ({ allProductsPage, categoryPage, subCategoryPage, search }) => {
     const [allProducts, setallProducts] = useState([]);
+    const [categories, setcategories] = useState([]);
     const [offset, setOffset] = useState(0);
     const [hideShowMore, sethideShowMore] = useState(false);
+    const [coverPhoto, setcoverPhoto] = useState("");
+    useEffect(() => {
+      console.warn(allProducts)
+
+    }, [allProducts])
+    
 
     const location = useLocation().pathname.split("/").pop();
     //filter
+    const [filters, setfilters] = useState({});
     const [selectedSize, setselectedSize] = useState(0);
     const [price, setPrice] = useState({ minIndex: 0, maxIndex: 0 });
     const [selectedColor, setselectedColor] = useState(0);
@@ -32,97 +40,114 @@ const Category = React.memo(
     const [searchValue, setSearchValue] = useState(null);
 
     // GET ALL PRODUCTS FROM API
-
-    useEffect(() => {
-        if (allProductsPage || searchValue === "") {
-          // &min_price=750&max_price=800&color=%23b71f1f&size=Impedit exercitatio&sort=high
-          setOffset(0);
-          fetch(
-            `https://siedra-shop.com/api/products/${discountProducts?"sales":""}?offset=0&limit=12&min_price=${
-              price.minIndex
-            }${price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""}${
-              sort ? `&sort=${sort}` : ""
-            }`,
-            requestOptions
-          )
-            .then((response) => response.json())
-            .then((result) => {
+    function fetchData() {
+      if (allProductsPage || searchValue === "") {
+        // &min_price=750&max_price=800&color=%23b71f1f&size=Impedit exercitatio&sort=high
+        setOffset(0);
+        fetch(
+          `https://siedra-shop.com/api/products/${
+            discountProducts ? "sales" : ""
+          }?offset=0&limit=12&min_price=${price.minIndex}${
+            price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""
+          }${sort ? `&sort=${sort}` : ""}${selectedSize?`&size=${selectedSize}`:""}`,
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            setallProducts(result.data.products);
+            setfilters(result.data.filters);
+            if (result.data.products.length < 12) {
+              sethideShowMore(true);
+            } else {
+              sethideShowMore(false);
+            }
+          })
+          .catch((error) => console.error(error));
+      } else if (categoryPage) {
+        setOffset(0);
+  
+        fetch(
+          `https://siedra-shop.com/api/products/${
+            discountProducts
+              ? `sales?category=${location.replace(/%20/g, "-")}`
+              : `category/${location.replace(/%20/g, "-")}`
+          }?offset=0&limit=12&min_price=${price.minIndex}${
+            price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""
+          }${sort ? `&sort=${sort}` : ""}${selectedSize?`&size=${selectedSize}`:""}`,
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            if (result.status === false) {
+              setallProducts([]);
+            } else {
               setallProducts(result.data.products);
+              setfilters(result.data.filters);
               if (result.data.products.length < 12) {
                 sethideShowMore(true);
               } else {
                 sethideShowMore(false);
               }
-            })
-            .catch((error) => console.error(error));
-        } else if (categoryPage) {
-          setOffset(0);
-
-          fetch(
-            `https://siedra-shop.com/api/products/${discountProducts?`sales?category=${location.replace(/%20/g,"-")}`:`category/${location.replace(/%20/g,"-")}`}?offset=0&limit=12&min_price=${price.minIndex}${
-              price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""
-            }${sort ? `&sort=${sort}` : ""}`,
-            requestOptions
-          )
-            .then((response) => response.json())
-            .then((result) => {
-              if (result.status === false) {
-                setallProducts([]);
+            }
+          })
+          .catch((error) => console.error(error));
+      } else if (subCategoryPage) {
+        setOffset(0);
+        fetch(
+          `https://siedra-shop.com/api/products/${
+            discountProducts
+              ? `sales?subcategory=${location.replace(/%20/g, "-")}`
+              : `subcategory/${location.replace(/%20/g, "-")}`
+          }?offset=0&limit=12&min_price=${price.minIndex}${
+            price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""
+          }${sort ? `&sort=${sort}` : ""}${selectedSize?`&size=${selectedSize}`:""}`,
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            if (result.status === false) {
+              setallProducts([]);
+            } else {
+              setallProducts(result.data.products);
+              setfilters(result.data.filters);
+              if (result.data.products.length < 12) {
+                sethideShowMore(true);
               } else {
-                setallProducts(result.data.products);
-                if (result.data.products.length < 12) {
-                  sethideShowMore(true);
-                } else {
-                  sethideShowMore(false);
-                }
+                sethideShowMore(false);
               }
-            })
-            .catch((error) => console.error(error));
-        } else if (subCategoryPage) {
-          setOffset(0);
-          fetch(
-            `https://siedra-shop.com/api/products/${discountProducts?`sales?subcategory=${location.replace(/%20/g,"-")}`:`subcategory/${location.replace(/%20/g,"-")}`}?offset=0&limit=12&min_price=${price.minIndex}${
-              price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""
-            }${sort ? `&sort=${sort}` : ""}`,
-            requestOptions
-          )
-            .then((response) => response.json())
-            .then((result) => {
-              if (result.status === false) {
-                setallProducts([]);
+            }
+          })
+          .catch((error) => console.error(error));
+      } else if (search && searchValue !== null) {
+        setOffset(0);
+        fetch(
+          `https://siedra-shop.com/api/products/search?name=${searchValue}&offset=0&limit=12`,
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            if (result.status === false) {
+              setallProducts([]);
+            } else {
+              setallProducts(result.data.products);
+              setfilters(result.data.filters);
+              if (result.data.products.length < 12) {
+                sethideShowMore(true);
               } else {
-                setallProducts(result.data.products);
-                if (result.data.products.length < 12) {
-                  sethideShowMore(true);
-                } else {
-                  sethideShowMore(false);
-                }
+                sethideShowMore(false);
               }
-            })
-            .catch((error) => console.error(error));
-        } else if (search && searchValue !== null) {
-          setOffset(0);
-          fetch(
-            `https://siedra-shop.com/api/products/search?name=${searchValue}&offset=0&limit=12`,
-            requestOptions
-          )
-            .then((response) => response.json())
-            .then((result) => {
-              if (result.status === false) {
-                setallProducts([]);
-              } else {
-                setallProducts(result.data.products);
-                if (result.data.products.length < 12) {
-                  sethideShowMore(true);
-                } else {
-                  sethideShowMore(false);
-                }
-              }
-            })
-            .catch((error) => console.error(error));
-        }
-      
-    }, [price, sort, location, searchValue, discountProducts]);
+            }
+          })
+          .catch((error) => console.error(error));
+      }
+    }
+    useEffect(() => {
+      const debouncedFetch = _debounce(fetchData, 300);
+      debouncedFetch();
+      return () => {
+        debouncedFetch.cancel();
+      };
+    }, [price, sort, location, searchValue, discountProducts ,selectedColor ,selectedSize]);
 
     const handleShowMore = () => {
       const changedOffset = offset + 12;
@@ -133,7 +158,7 @@ const Category = React.memo(
             price.minIndex
           }${price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""}${
             sort ? `&sort=${sort}` : ""
-          }`,
+          }${selectedSize?`&size=${selectedSize}`:""}`,
           requestOptions
         )
           .then((response) => response.json())
@@ -149,7 +174,7 @@ const Category = React.memo(
             "-"
           )}?offset=${changedOffset}&limit=12&min_price=${price.minIndex}${
             price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""
-          }${sort ? `&sort=${sort}` : ""}`,
+          }${sort ? `&sort=${sort}` : ""}${selectedSize?`&size=${selectedSize}`:""}`,
           requestOptions
         )
           .then((response) => response.json())
@@ -165,7 +190,7 @@ const Category = React.memo(
             "-"
           )}?offset=${changedOffset}&limit=12&min_price=${price.minIndex}${
             price.maxIndex > 0 ? `&max_price=${price.maxIndex}` : ""
-          }${sort ? `&sort=${sort}` : ""}`,
+          }${sort ? `&sort=${sort}` : ""}${selectedSize?`&size=${selectedSize}`:""}`,
           requestOptions
         )
           .then((response) => response.json())
@@ -217,6 +242,40 @@ const Category = React.memo(
     }, [location]);
 
     // clicking Outside
+    useEffect(() => {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+
+      fetch("https://siedra-shop.com/api/categories/", requestOptions)
+        .then((response) => response.json())
+        .then((result) => setcategories(result.data.categories))
+        .catch((error) => console.error(error));
+    }, []);
+    useEffect(() => {
+      if (categoryPage) {
+        setcoverPhoto(
+          categories?.find(
+            (item) => item.name_du === location.replace(/%20/g, " ")
+          )?.Cover_Image_link
+        );
+      } else if (subCategoryPage) {
+        for (let i = 0; i < categories.length; i++) {
+          console.log(categories[i].subs);
+          for (let j = 0; j < categories[i].subs.length; j++) {
+            if (
+              categories[i].subs[j].name_du === location.replace(/%20/g, " ")
+            ) {
+              console.log(categories[i].subs[j].name_du);
+              setcoverPhoto(categories[i].subs[j].category.Cover_Image_link);
+            }
+          }
+        }
+      } else if (allProductsPage) {
+        setcoverPhoto(categories[0]?.Cover_Image_link);
+      }
+    }, [allProducts]);
 
     return (
       <div className="container m-auto">
@@ -250,12 +309,15 @@ const Category = React.memo(
               price={price}
               setDiscountProducts={setDiscountProducts}
               discountProducts={discountProducts}
+              categories={categories}
+              setcategories={setcategories}
+              filters={filters}
             />
           )}
           <div className="flex-[6] ">
             <div className="banar m-3 rounded-lg overflow-hidden">
               <img
-                src={CategoryBanar}
+                src={coverPhoto}
                 alt="banar"
                 className="w-full h-[250px] object-contain max-md:object-cover"
               />
@@ -292,7 +354,7 @@ const Category = React.memo(
                   <div className="space-y-5">
                     <div className="flex items-start justify-between gap-4 max-sm:gap-2">
                       <div className="flex items-center gap-2 flex-wrap">
-                        {(price.maxIndex !== 0 || price.minIndex !== 0) && (
+                        {(price.maxIndex !== filters?.max_price || price.minIndex !== filters?.min_price) && (
                           <div className="selected flex gap-2 bg-gray-200 w-fit items-center px-2 py-1 rounded-xl">
                             <span className="text-gray-700 text-xs">
                               Price from ({price.minIndex} $) to (
@@ -302,8 +364,8 @@ const Category = React.memo(
                               className="text-gray-900 cursor-pointer font-semibold "
                               onClick={() =>
                                 setPrice({
-                                  minIndex: 0,
-                                  maxIndex: 0,
+                                  minIndex: filters?.min_price,
+                                  maxIndex: filters?.max_price,
                                 })
                               }
                             >
@@ -311,16 +373,16 @@ const Category = React.memo(
                             </span>
                           </div>
                         )}
-                        {(price.maxIndex !== 0 || price.minIndex !== 0) && (
-                          <div className="selected flex gap-2 bg-indigo-100 w-fit items-center px-2 py-1 rounded-xl cursor-pointer">
+                        {(price.maxIndex !== filters?.max_price || price.minIndex !== filters?.min_price) && (
+                          <div className="selected flex gap-2 bg-indigo-100 w-fit items-center px-2 py-1 rounded-xl cursor-pointer" onClick={() =>
+                            setPrice({
+                              minIndex: filters?.min_price,
+                              maxIndex: filters?.max_price,
+                            })
+                          }>
                             <span
                               className="text-gray-700 text-xs"
-                              onClick={() =>
-                                setPrice({
-                                  minIndex: 0,
-                                  maxIndex: 0,
-                                })
-                              }
+                              
                             >
                               Clear
                             </span>
@@ -384,6 +446,9 @@ const Category = React.memo(
                         price={price}
                         setDiscountProducts={setDiscountProducts}
                         discountProducts={discountProducts}
+                        categories={categories}
+                        setcategories={setcategories}
+                        filters={filters}
                       />
                     </ul>
                   </div>
@@ -392,11 +457,11 @@ const Category = React.memo(
             )}
 
             <div className="products flex flex-wrap justify-evenly gap-2 my-3">
-              {allProducts.map((item, i) => (
+              {allProducts && allProducts.map((item, i) => (
                 <Link to={`/product/${item.name_du}`}>
                   <div
                     key={i}
-                    className="rounded-lg bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px] w-[340px] max-lg:w-[260px] p-[0px] relative"
+                    className="rounded-lg bg-white flex flex-col justify-between items-center gap-1 max-md:h-full w-[340px] max-lg:w-[260px] p-[0px] relative max-md:w-[220px] max-sm:w-auto max-sm:max-w-[160px]"
                   >
                     <div className="love absolute bg-white shadow-lg rounded-full flex justify-center items-center top-5 right-5 w-8 h-8">
                       <button className="">

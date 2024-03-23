@@ -299,7 +299,7 @@ const SingleProduct = ({ note }) => {
                 </div>
                 {product?.sale && product?.sale !== 0 && (
                   <span className=" text-lg text-gray-500 line-through max-md:text-base">
-                    $ {product?.price + product?.shippingPrice}
+                    $ {product?.price}
                   </span>
                 )}
               </div>
@@ -309,23 +309,22 @@ const SingleProduct = ({ note }) => {
                   <span className="text-indigo-600 text-3xl text-black font-semibold max-md:text-xl">
                     $
                     {(
-                      product?.shippingPrice +
                       product?.price -
                       (product?.price * product?.sale.Value) / 100
                     ).toFixed(2)}
                   </span>
                 ) : (
                   <span className="text-indigo-600 text-3xl text-black font-semibold max-md:text-xl">
-                    $ {product?.price + product?.shippingPrice}
+                    $ {product?.price}
                   </span>
                 )}
                 <span className="text-gray-500 max-md:text-sm">
-                  incl. VAT plus shipping costs
+                  Plus $ {product?.shippingPrice} shipping costs
                 </span>
               </div>
             </div>
           </div>
-          {true && (
+          {product?.sale && product?.sale !== 0 && (
             <div className="bg-white p-4 mt-1 space-y-6 flex flex-col items-center">
               <h4 className="text-lg text-black font-semibold">CountDown :</h4>
               <div className="grid grid-flow-col gap-5 text-center auto-cols-max">

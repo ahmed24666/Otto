@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { RangeSlider } from "react-double-range-slider";
 import { Link } from "react-router-dom";
 
@@ -14,8 +14,10 @@ const CategoryComp = React.memo(
     price,
     setDiscountProducts,
     discountProducts,
+    categories,
+    setcategories,
+    filters,
   }) => {
-    const [categories, setcategories] = useState([]);
     useEffect(() => {
       const requestOptions = {
         method: "GET",
@@ -27,22 +29,71 @@ const CategoryComp = React.memo(
         .then((result) => setcategories(result.data.categories))
         .catch((error) => console.error(error));
     }, []);
+
     useEffect(() => {
-      console.warn(categories);
-    }, [categories]);
-    const sizes = [
-      "S (44/46)",
-      "M (48/50)",
-      "L (52/54)",
-      "XL (56/58)",
-      "XXL (60/62)",
-      "3XL (64/66)",
-      "4XL (68/70)",
-      "5XL (72/74)",
-    ];
+      console.log(filters);
+    }, [filters]);
+
+    // slider 
+    const [minVal, setMinVal] = useState(0);
+    const [maxVal, setMaxVal] = useState(100);
+    const minValRef = useRef(filters?.min_price);
+    const maxValRef = useRef(filters?.max_price);
+    const range = useRef(null);
     useEffect(() => {
-      console.info(price);
-    }, [price]);
+      setMaxVal(filters?.max_price)
+      setMinVal(filters?.min_price)    
+      setPrice({ minIndex: filters?.min_price, maxIndex: filters?.max_price });  
+    }, [filters?.min_price ,filters?.max_price])
+    
+  
+    // Convert to percentage
+    const getPercent = useCallback(
+      (value) => Math.round(((value - filters?.min_price) / (filters?.max_price - filters?.min_price)) * 100),
+      [filters?.min_price, filters?.max_price]
+    );
+  
+    // Set width of the range to decrease from the left side
+    useEffect(() => {
+      if(price.minIndex ===filters?.min_price && price.maxIndex === filters?.max_price){
+        if (range.current) {
+          range.current.style.left = `0%`;
+          range.current.style.width = `100%`;
+        }
+      }else{
+        const minPercent = getPercent(minVal);
+        const maxPercent = getPercent(maxValRef.current);
+    
+        if (range.current) {
+          range.current.style.left = `${minPercent}%`;
+          range.current.style.width = `${maxPercent - minPercent}%`;
+        }
+      }
+    }, [minVal, getPercent,maxVal]);
+  
+    // Set width of the range to decrease from the right side
+    useEffect(() => {
+      if(price.minIndex ===filters?.min_price && price.maxIndex === filters?.max_price){
+        if (range.current) {
+          range.current.style.right = `0%`;
+          range.current.style.width = `100%`;
+        }
+      }else{
+      const minPercent = getPercent(minVal);
+      const maxPercent = getPercent(maxValRef.current);
+  
+      if (range.current) {
+        range.current.style.right = `${maxPercent}%`;
+        range.current.style.width = `${maxPercent - minPercent}% `;
+      }}
+    }, [maxVal, getPercent,minVal]);
+  
+    // Get min and max values when their state changes
+    const onChange =({ min, max })=> setPrice({ minIndex: min, maxIndex: max })
+    useEffect(() => {
+      onChange({ min: minVal, max: maxVal });
+    }, [minVal, maxVal]);
+    // slider 
 
     return (
       <div
@@ -100,25 +151,27 @@ const CategoryComp = React.memo(
             })}
           </div>
         </div>
-        <div className="Size space-y-5">
-          <h2 className="font-semibold">Size</h2>
-          <div className="flex gap-1 flex-wrap gap-3">
-            {sizes.map((size, i) => {
-              return (
-                <div
-                  className={`${
-                    i === selectedSize
-                      ? "border border-[#5137ff]"
-                      : "border border-gray-300"
-                  } rounded-lg p-3 flex justify-center items-center cursor-pointer max-lg:text-xs max-lg:p-2`}
-                  onClick={() => setselectedSize(i)}
-                >
-                  {size}
-                </div>
-              );
-            })}
+        {filters?.sizes?.length > 0 && (
+          <div className="Size space-y-5">
+            <h2 className="font-semibold">Size</h2>
+            <div className="flex gap-1 flex-wrap gap-3">
+              {filters?.sizes?.map((size) => {
+                return (
+                  <div
+                    className={`${
+                      size === selectedSize
+                        ? "border border-[#5137ff]"
+                        : "border border-gray-300"
+                    } rounded-lg p-3 flex justify-center items-center cursor-pointer max-lg:text-xs max-lg:p-2`}
+                    onClick={() => setselectedSize(size)}
+                  >
+                    {size}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
+        )}
         <div className="price space-y-5">
           <div className="collapse collapse-arrow join-item border border-base-300">
             <input
@@ -130,40 +183,65 @@ const CategoryComp = React.memo(
               Price
             </div>
             <div className="collapse-content">
-              <RangeSlider
-                value={{ min: 0, max: 3000 }}
-                onChange={(e) => {
-                  setPrice({
-                    minIndex: e.minIndex,
-                    maxIndex: e.maxIndex,
-                  });
-                }}
-                tooltipPosition="under"
-                tooltipVisibility="always"
-              />
+              {filters?.min_price && filters?.max_price && (
+                <div className="h-[70px] flex items-center">
+                <input
+                  type="range"
+                  min={filters?.min_price}
+                  max={filters?.max_price}
+                  value={minVal}
+                  onChange={(event) => {
+                    const value = Math.min(Number(event.target.value), maxVal - 1);
+                    setMinVal(value);
+                    minValRef.current = value;
+                  }}
+                  className="thumb thumb--left"
+                  style={{ zIndex: minVal > filters?.max_price - 100 && "5" }}
+                />
+                <input
+                  type="range"
+                  min={filters?.min_price}
+                  max={filters?.max_price}
+                  value={maxVal}
+                  onChange={(event) => {
+                    const value = Math.max(Number(event.target.value), minVal + 1);
+                    setMaxVal(value);
+                    maxValRef.current = value;
+                  }}
+                  className="thumb thumb--right"
+                />
+          
+                <div className="sliderDual">
+                  <div className="slider__track" />
+                  <div ref={range} className="slider__range" />
+                  <div className="slider__left-value">{minVal}</div>
+                  <div className="slider__right-value">{maxVal}</div>
+                </div>
+              </div>
+              )}
             </div>
           </div>
         </div>
-        <div className="color space-y-5">
-          <div className="collapse collapse-arrow join-item border border-base-300">
-            <input
-              type="checkbox"
-              name="my-accordion-color"
-              className="min-h-0"
-            />
-            <div className="collapse-title font-medium min-h-0 p-[0.8rem]">
-              Color
-            </div>
-            <div className="collapse-content">
-              <div className="flex items-center gap-[1px] flex-wrap">
-                {["Red", "Blue", "Green", "Yellow", "Black", "White"].map(
-                  (color, i) => {
+        {filters?.colors?.length > 0 && (
+          <div className="color space-y-5">
+            <div className="collapse collapse-arrow join-item border border-base-300">
+              <input
+                type="checkbox"
+                name="my-accordion-color"
+                className="min-h-0"
+              />
+              <div className="collapse-title font-medium min-h-0 p-[0.8rem]">
+                Color
+              </div>
+              <div className="collapse-content">
+                <div className="flex items-center gap-[1px] flex-wrap">
+                  {filters?.colors?.map((color) => {
                     return (
                       <div
                         className={`${
-                          i === selectedColor ? "border border-black" : ""
+                          color === selectedColor ? "border border-black" : ""
                         } rounded-full p-1 flex justify-center items-center cursor-pointer`}
-                        onClick={() => setselectedColor(i)}
+                        onClick={() => setselectedColor(color)}
                       >
                         <div className="rounded-full cursor-pointer bg-gray-200 p-2 flex justify-between items-center gap-1 text-xs">
                           <div
@@ -174,13 +252,13 @@ const CategoryComp = React.memo(
                         </div>
                       </div>
                     );
-                  }
-                )}
+                  })}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="stars space-y-5">
+        )}
+        {/* <div className="stars space-y-5">
           <div className="collapse collapse-arrow join-item border border-base-300">
             <input
               type="checkbox"
@@ -218,13 +296,16 @@ const CategoryComp = React.memo(
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="flex items-center justify-between">
           <div className="collapse-title font-medium min-h-0 p-[0.8rem] flex gap-1 items-center w-fit">
             Discounted Items
           </div>
           <label class="switch">
-            <input type="checkbox" onChange={(e)=>setDiscountProducts(e.target.checked)} />
+            <input
+              type="checkbox"
+              onChange={(e) => setDiscountProducts(e.target.checked)}
+            />
             <span class="slider"></span>
           </label>
         </div>

@@ -86,7 +86,7 @@ const CommonProductSlider = ({ title, arrayOfProducts=[...Array(10)] }) => {
             <Link to={`/product/${item?.name_du}`}>
               <div
                 key={i}
-                className="rounded-2xl bg-white flex flex-col justify-between items-center gap-1 max-md:h-[400px] max-[473px]:h-auto relative"
+                className="rounded-2xl bg-white flex flex-col justify-between items-center gap-1 h-full relative"
               >
                 <div className="love absolute bg-white shadow-lg rounded-full flex justify-center items-center top-5 right-5 w-8 h-8">
                   <button className="">
@@ -100,7 +100,7 @@ const CommonProductSlider = ({ title, arrayOfProducts=[...Array(10)] }) => {
                 )}
                 <div className="image p-2 w-full rounded-lg">
                   <img
-                    src={model}
+                    src={item?.images?.[0]?.link}
                     alt="category"
                     className="rounded-lg w-full aspect-[1/1] max-md:h-[242px] object-cover max-[473px]:h-[200px]"
                   />
